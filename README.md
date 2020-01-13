@@ -1,10 +1,6 @@
 # arcadia
 
-FIXME: Write a one-line description of your library/project.
-
-## Overview
-
-FIXME: Write a paragraph about the library/project and highlight its goals.
+A game engine in ClojureScript inspired by Racket's big-bang and PICO-8
 
 ## Setup
 
@@ -34,6 +30,6 @@ get live reloading, nor a REPL.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 A.C. Danvers
 
 Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
