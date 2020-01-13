@@ -7,24 +7,33 @@
 
 (defonce app-state (atom 1))
 
-(defn game-loop! [ctx keys]
-  (.clearRect ctx 0 0 256 256)
-  (.fillText ctx @app-state 64 128)
-  (cond
-    (get @keys "ArrowUp") (swap! app-state inc)
-    (get @keys "ArrowDown") (swap! app-state dec))
-  (js/requestAnimationFrame (fn [] (game-loop! ctx keys))))
+(defn game-loop! [ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
+  (let [new-state (-> state
+                      (on-key @key-evs)
+                      (on-tick))]
+    (.clearRect ctx 0 0 256 256)
+    (to-draw new-state ctx)
+    (js/requestAnimationFrame (fn [] (game-loop! ctx key-evs new-state handlers)))))
 
-(defn start! []
+(defn start! [{:keys [init] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
-        keys (atom {})]
-    (set! js/window.onkeyup (fn [e] (swap! keys assoc (.-code e) false)))
-    (set! js/window.onkeydown (fn [e] (swap! keys assoc (.-code e) true)))
-    (game-loop! ctx keys)))
+        key-evs (atom {})
+        init-state (init)]
+    (set! js/window.onkeyup (fn [e] (swap! key-evs assoc (.-code e) false)))
+    (set! js/window.onkeydown (fn [e] (swap! key-evs assoc (.-code e) true)))
+    (game-loop! ctx key-evs init-state handlers)))
 
-
-(start!)
+(start!
+ {:init (fn [] 0)
+  :on-key (fn [state key-evs]
+            (cond
+              (get key-evs "ArrowUp") (inc state)
+              (get key-evs "ArrowDown") (dec state)
+              :else state))
+  :on-tick (fn [x] x)
+  :to-draw (fn [state ctx]
+             (.fillText ctx state 64 128))})
 
 (defn on-js-reload []
   ;; optionally touch your app-state to force rerendering depending on
