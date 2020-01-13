@@ -3,10 +3,6 @@
 
 (enable-console-print!)
 
-;; define your app data so that it doesn't get over-written on reload
-
-(defonce app-state (atom 1))
-
 (defn game-loop! [ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
@@ -34,8 +30,3 @@
   :on-tick (fn [x] x)
   :to-draw (fn [state ctx]
              (.fillText ctx state 64 128))})
-
-(defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  (reset! app-state 0))
