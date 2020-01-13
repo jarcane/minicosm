@@ -18,6 +18,7 @@
         init-state (init)]
     (set! js/window.onkeyup (fn [e] (swap! key-evs assoc (.-code e) false)))
     (set! js/window.onkeydown (fn [e] (swap! key-evs assoc (.-code e) true)))
+    (.scale ctx 2 2)
     (game-loop! 0 ctx key-evs init-state handlers)))
 
 (start!
