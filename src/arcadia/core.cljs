@@ -22,12 +22,16 @@
     (game-loop! 0 ctx key-evs init-state handlers)))
 
 (start!
- {:init (fn [] 0)
-  :on-key (fn [state key-evs]
+ {:init (fn [] [128 128])
+  :on-key (fn [[x y] key-evs]
             (cond
-              (get key-evs "ArrowUp") (inc state)
-              (get key-evs "ArrowDown") (dec state)
-              :else state))
+              (get key-evs "ArrowUp") [x (dec y)]
+              (get key-evs "ArrowDown") [x (inc y)]
+              (get key-evs "ArrowLeft") [(dec x) y]
+              (get key-evs "ArrowRight") [(inc x) y]
+              :else [x y]))
   :on-tick (fn [state _] state)
-  :to-draw (fn [state ctx]
-             (.fillText ctx state 64 128))})
+  :to-draw (fn [[x y] ctx]
+             (def img (js/Image.))
+             (set! (.-src img) "https://media.giphy.com/media/NMr9UUZSqQbhS/giphy.gif")
+             (.drawImage ctx img x y))})
