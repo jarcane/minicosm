@@ -9,7 +9,8 @@
     img))
 
 (defn draw! [ctx graphics]
-  (.drawImage ctx (:background graphics) 0 0)
+  (when-let [bkg (:background graphics)]
+    (.drawImage ctx bkg 0 0))
   (doseq [[spr x y] (:sprites graphics)]
     (.drawImage ctx spr x y))
   (doseq [[str x y] (:text graphics)]
