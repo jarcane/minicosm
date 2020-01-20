@@ -1,6 +1,16 @@
 (ns braeburn.demo
   (:require [braeburn.core :refer [start!]]
-            [braeburn.image :refer [image]]))
+            [braeburn.image :refer [image _ O X sprite8]]))
+
+(def sprite
+  (sprite8 [_ _ _ _ _ _ _ _
+            _ _ _ O O _ _ _
+            _ _ O X X O _ _
+            _ O X O O X O _
+            _ O X X X X O _
+            _ O X X X X O _
+            O X X O O X X O
+            O X O _ _ O X O]))
 
 (def game-handlers
   {:init (fn [] [128 128])
@@ -13,9 +23,8 @@
                :else [x y]))
    :on-tick (fn [state _] state)
    :to-draw (fn [[x y]]
-              (let [img (image "https://media.giphy.com/media/NMr9UUZSqQbhS/giphy.gif")]
-                {:background (image "https://i.pinimg.com/originals/e1/ff/53/e1ff53238b5263d0e6a963363e3a4ff0.jpg")
-                 :sprites [[img x y]]
-                 :text [["THIS IS A TEST" 16 16]]}))})
+              {:background (image "https://i.pinimg.com/originals/e1/ff/53/e1ff53238b5263d0e6a963363e3a4ff0.jpg")
+               :sprites [[sprite x y]]
+               :text [["THIS IS A TEST" 16 16]]})})
 
 (start! game-handlers)
