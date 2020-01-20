@@ -22,14 +22,14 @@
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {:on-jsload "braeburn.core/on-js-reload"
+                :figwheel {;; :on-jsload "braeburn.core/on-js-reload"
                            ;; :open-urls will pop open your application
                            ;; in the default browser once Figwheel has
                            ;; started and compiled your application.
                            ;; Comment this out once it no longer serves you.
                            :open-urls ["http://localhost:3449/index.html"]}
 
-                :compiler {:main braeburn.core
+                :compiler {:main braeburn.demo
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/braeburn.js"
                            :output-dir "resources/public/js/compiled/out"
