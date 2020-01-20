@@ -1,4 +1,4 @@
-# arcadia
+# braeburn
 
 A game engine in ClojureScript inspired by Racket's big-bang and PICO-8
 
