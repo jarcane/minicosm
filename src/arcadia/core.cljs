@@ -15,13 +15,14 @@
     (.drawImage ctx spr x y))
   (doseq [[str x y] (:text graphics)]
     (set! (.-fillStyle ctx) "white")
+    (set! (.-font ctx) "9pt ChicagoFLFRegular")
     (.fillText ctx str x y)))
 
 (defn game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
-    (.clearRect ctx 0 0 256 256)
+    (.clearRect ctx 0 0 512 384)
     (draw! ctx (to-draw new-state))
     (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state handlers)))))
 

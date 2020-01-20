@@ -1,6 +1,6 @@
 # braeburn
 
-A game engine in ClojureScript inspired by Racket's big-bang and PICO-8
+A functional-first game engine inspired by classic B&W Macs and Racket's `big-bang`
 
 ## Setup
 
