@@ -39,8 +39,3 @@
             y (range 0 384 16)]
       (.drawImage ctx (tile-fn) x y))
     cvs))
-
-(defn image [url]
-  (let [img (js/Image.)]
-    (set! (.-src img) url)
-    img))
