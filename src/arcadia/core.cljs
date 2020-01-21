@@ -34,7 +34,9 @@
      The graphics-state map may contain any of the following keys:
      {:background A static image to serve as the background
       :sprites An array of tuples, each containing a sprite and its x,y coordinates
-      :text An array of tuples, each containing a string and its x,y coordinates}}"
+      :text An array of tuples, each containing a string and its x,y coordinates}
+     Note that the elements of the display will be drawn in the order listed here, first background, then sprites,
+     and finally text.}"
   [{:keys [init] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
