@@ -16,10 +16,10 @@
   {:init (fn [] [128 128])
    :on-key (fn [[x y] key-evs]
              (cond
-               (get key-evs "ArrowUp") [x (- y 3)]
-               (get key-evs "ArrowDown") [x (+ y 3)]
-               (get key-evs "ArrowLeft") [(- x 3) y]
-               (get key-evs "ArrowRight") [(+ x 3) y]
+               (key-evs "ArrowUp") [x (- y 3)]
+               (key-evs "ArrowDown") [x (+ y 3)]
+               (key-evs "ArrowLeft") [(- x 3) y]
+               (key-evs "ArrowRight") [(+ x 3) y]
                :else [x y]))
    :on-tick (fn [state _] state)
    :to-draw (fn [[x y]]
