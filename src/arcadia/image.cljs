@@ -18,8 +18,27 @@
   (-> (to-image-data arr width)
       (image-data->temp-canvas width)))
 
-(defn sprite8 [arr]
+(defn sprite8
+  "Given an array of color values (one of the _/O/X constants) of length 64, returns an 8x8 sprite"
+  [arr]
   (make-sprite arr 8))
+
+(defn sprite16
+  "Given an array of 256 color values (_/O_X), returns a 16x16 sprite"
+  [arr]
+  (make-sprite arr 16))
+
+(defn generate-background 
+  "Given a function that returns a 16x16 sprite, generates a full-screen (512x384) background image"
+  [tile-fn]
+  (let [cvs (js/document.createElement "canvas")
+        ctx (.getContext cvs "2d")]
+    (set! (.. ctx -canvas -width) 512)
+    (set! (.. ctx -canvas -height) 384)
+    (doseq [x (range 0 512 16)
+            y (range 0 384 16)]
+      (.drawImage ctx (tile-fn) x y))
+    cvs))
 
 (defn image [url]
   (let [img (js/Image.)]

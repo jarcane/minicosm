@@ -1,6 +1,6 @@
 (ns braeburn.demo
   (:require [braeburn.core :refer [start!]]
-            [braeburn.image :refer [image _ O X sprite8]]))
+            [braeburn.image :refer [_ O X sprite8 sprite16 generate-background]]))
 
 (def sprite
   (sprite8 [_ _ _ _ _ _ _ _
@@ -11,6 +11,15 @@
             _ O X X X X O _
             O X X O O X X O
             O X O _ _ O X O]))
+
+(defn make-stars []
+  (sprite16 
+   (for [_ (range 256)]
+     (if (< (rand) 0.01)
+       O
+       X))))
+
+(def background (generate-background make-stars))
 
 (def game-handlers
   {:init (fn [] [128 128])
@@ -23,7 +32,7 @@
                :else [x y]))
    :on-tick (fn [state _] state)
    :to-draw (fn [[x y]]
-              {:background (image "https://i.pinimg.com/originals/e1/ff/53/e1ff53238b5263d0e6a963363e3a4ff0.jpg")
+              {:background background
                :sprites [[sprite x y]]
                :text [["THIS IS A TEST" 16 16]]})})
 
