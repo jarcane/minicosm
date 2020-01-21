@@ -1,11 +1,14 @@
-(ns braeburn.image)
+(ns braeburn.image
+  (:require [clojure.core.reducers :as r]))
 
-(def _ [0 0 0 0])
-(def O [255 255 255 255])
-(def X [0 0 0 255])
+(def _ 0x00000000)
+(def O 0xFFFFFFFF)
+(def X 0xFF000000)
 
 (defn- to-image-data [arr width]
-  (let [uint8 (js/Uint8ClampedArray. (flatten arr))]
+  (let [as32 (js/Uint32Array.from arr)
+        buff (.-buffer as32)
+        uint8 (js/Uint8ClampedArray. buff)]
     (js/ImageData. uint8 width)))
 
 (defn- image-data->temp-canvas [img-data width]
