@@ -1,5 +1,4 @@
-(ns braeburn.image
-  (:require [clojure.core.reducers :as r]))
+(ns braeburn.image)
 
 (def _ 0x00000000)
 (def O 0xFFFFFFFF)
