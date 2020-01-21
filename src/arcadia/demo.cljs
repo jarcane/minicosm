@@ -15,7 +15,7 @@
 (defn make-stars []
   (sprite16 
    (for [_ (range 256)]
-     (if (< (rand) 0.01)
+     (if (< (rand) 0.005)
        O
        X))))
 
