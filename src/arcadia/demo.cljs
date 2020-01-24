@@ -3,8 +3,8 @@
             [braeburn.image :refer [_ O X sprite8 sprite16 generate-background]]))
 
 (def sprite
-  (sprite8 [_ _ _ _ _ _ _ _
-            _ _ _ O O _ _ _
+  (sprite8 [_ _ _ O O _ _ _
+            _ _ O X X O _ _
             _ _ O X X O _ _
             _ O X O O X O _
             _ O X X X X O _
