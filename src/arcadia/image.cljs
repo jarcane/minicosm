@@ -10,7 +10,7 @@
         uint8 (js/Uint8ClampedArray. buff)]
     (js/ImageData. uint8 width)))
 
-(defn- image-data->temp-canvas [img-data width]
+(defn- image-data->temp-canvas [img-data]
   (let [cvs (js/document.createElement "canvas")
         ctx (.getContext cvs "2d")]
     (.putImageData ctx img-data 0 0)
@@ -18,7 +18,7 @@
 
 (defn- make-sprite [arr width]
   (-> (to-image-data arr width)
-      (image-data->temp-canvas width)))
+      (image-data->temp-canvas)))
 
 (defn sprite8
   "Given an array of color values (one of the _/O/X constants) of length 64, returns an 8x8 sprite"
