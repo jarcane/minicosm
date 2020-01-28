@@ -8,7 +8,10 @@
   (doseq [[spr x y] (:sprites graphics)]
     (.drawImage ctx spr x y))
   (doseq [[str x y] (:text graphics)]
-    (.fillText ctx str x y)))
+    (.fillText ctx str x y))
+  (doseq [[mtd & args] (:draw graphics)]
+    (case mtd
+      :fillRect (let [[x y w h] args] (.fillRect ctx x y w h)))))
 
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
