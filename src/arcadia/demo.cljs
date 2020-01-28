@@ -1,7 +1,7 @@
 (ns braeburn.demo
   (:require [braeburn.core :refer [start!]]
             [braeburn.image :refer [_ O X sprite8 sprite16 generate-background]]
-            [braeburn.drawing :refer [filled-rect]]))
+            [braeburn.drawing :refer [filled-rect stroke-rect]]))
 
 (def sprite
   (sprite8 [_ _ _ O O _ _ _
@@ -36,6 +36,7 @@
               {:background background
                :sprites [[sprite x y]]
                :text [["THIS IS A TEST" 16 16]]
-               :draw [(filled-rect 300 200 64 64)]})})
+               :draw [(filled-rect 300 200 64 64)
+                      (stroke-rect 200 150 32 32)]})})
 
 (start! game-handlers)

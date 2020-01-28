@@ -1,17 +1,16 @@
-(ns braeburn.core)
+(ns braeburn.core
+  (:require [braeburn.drawing :refer [draw-commands!]]))
 
 (enable-console-print!)
 
-(defn- draw! [ctx graphics]
-  (when-let [bkg (:background graphics)]
+(defn- draw! [ctx {:keys [background sprites text draw] :as graphics}]
+  (when-let [bkg background]
     (.drawImage ctx bkg 0 0))
-  (doseq [[spr x y] (:sprites graphics)]
+  (doseq [[spr x y] sprites]
     (.drawImage ctx spr x y))
-  (doseq [[str x y] (:text graphics)]
+  (doseq [[str x y] text]
     (.fillText ctx str x y))
-  (doseq [[mtd & args] (:draw graphics)]
-    (case mtd
-      :fillRect (let [[x y w h] args] (.fillRect ctx x y w h)))))
+  (draw-commands! ctx draw))
 
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
