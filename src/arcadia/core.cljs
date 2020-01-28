@@ -46,6 +46,7 @@
         init-state (init)]
     (set! (.-fillStyle ctx) "white")
     (set! (.-font ctx) "9pt ChicagoFLFRegular")
+    (set! (.-imageSmoothingEnabled ctx) false)
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
     (game-loop! 0 ctx key-evs init-state handlers)))
