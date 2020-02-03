@@ -1,6 +1,6 @@
 (ns minicosm.demo
   (:require [minicosm.core :refer [start!]]
-            [minicosm.image :refer [_ O X sprite8 sprite16 generate-background]]
+            [minicosm.image :refer [sprite8 sprite16 generate-background]]
             [minicosm.drawing :refer [filled-rect stroke-rect set-stroke stroke-circ]]))
 
 (def _ 0x00000000)
@@ -24,7 +24,7 @@
        O
        X))))
 
-(def background (generate-background make-stars))
+(def background (generate-background 512 385 16 make-stars))
 
 (def game-handlers
   {:init (fn [] [128 128])

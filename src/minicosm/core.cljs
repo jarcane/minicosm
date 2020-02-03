@@ -16,7 +16,7 @@
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
-    (.clearRect ctx 0 0 512 384)
+    (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
     (draw! ctx (to-draw new-state))
     (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state handlers)))))
 
@@ -44,9 +44,6 @@
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
         init-state (init)]
-    (set! (.-fillStyle ctx) "white")
-    (set! (.-font ctx) "9pt ChicagoFLFRegular")
-    (set! (.-imageSmoothingEnabled ctx) false)
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
     (game-loop! 0 ctx key-evs init-state handlers)))
