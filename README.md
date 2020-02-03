@@ -1,6 +1,6 @@
 # minicosm
 
-A simple functional-first game engine inspired by Racket's `big-bang`
+A simple functional-first game engine inspired by universe.rkt
 
 ## Setup
 
