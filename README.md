@@ -1,6 +1,6 @@
-# braeburn
+# minicosm
 
-A functional-first game engine inspired by classic B&W Macs and Racket's `big-bang`
+A simple functional-first game engine inspired by Racket's `big-bang`
 
 ## Setup
 

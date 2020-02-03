@@ -1,8 +1,4 @@
-(ns braeburn.image)
-
-(def _ 0x00000000)
-(def O 0xFFFFFFFF)
-(def X 0xFF000000)
+(ns minicosm.image)
 
 (defn- to-image-data [arr width]
   (let [as32 (js/Uint32Array.from arr)
@@ -21,12 +17,12 @@
       (image-data->temp-canvas)))
 
 (defn sprite8
-  "Given an array of color values (one of the _/O/X constants) of length 64, returns an 8x8 sprite"
+  "Given an array of color values of length 64, returns an 8x8 sprite"
   [arr]
   (make-sprite arr 8))
 
 (defn sprite16
-  "Given an array of 256 color values (_/O_X), returns a 16x16 sprite"
+  "Given an array of 256 color values, returns a 16x16 sprite"
   [arr]
   (make-sprite arr 16))
 

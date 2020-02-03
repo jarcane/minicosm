@@ -1,4 +1,4 @@
-(ns braeburn.drawing)
+(ns minicosm.drawing)
 
 (defn draw-commands! [ctx cmds]
   (doseq [[mtd & args] cmds]

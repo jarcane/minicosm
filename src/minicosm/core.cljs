@@ -1,5 +1,5 @@
-(ns braeburn.core
-  (:require [braeburn.drawing :refer [draw-commands!]]))
+(ns minicosm.core
+  (:require [minicosm.drawing :refer [draw-commands!]]))
 
 (enable-console-print!)
 

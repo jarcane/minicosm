@@ -1,7 +1,11 @@
-(ns braeburn.demo
-  (:require [braeburn.core :refer [start!]]
-            [braeburn.image :refer [_ O X sprite8 sprite16 generate-background]]
-            [braeburn.drawing :refer [filled-rect stroke-rect set-stroke stroke-circ]]))
+(ns minicosm.demo
+  (:require [minicosm.core :refer [start!]]
+            [minicosm.image :refer [_ O X sprite8 sprite16 generate-background]]
+            [minicosm.drawing :refer [filled-rect stroke-rect set-stroke stroke-circ]]))
+
+(def _ 0x00000000)
+(def O 0xFFFFFFFF)
+(def X 0xFF000000)
 
 (def sprite
   (sprite8 [_ _ _ O O _ _ _

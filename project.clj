@@ -1,6 +1,6 @@
-(defproject braeburn "0.1.0-SNAPSHOT"
+(defproject minicosm "0.1.0-SNAPSHOT"
   :description "A game engine inspired by classic B&W Macs" 
-  :url "https://github.com/jarcane/braeburn"
+  :url "https://github.com/jarcane/minicosm"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -22,16 +22,16 @@
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {;; :on-jsload "braeburn.core/on-js-reload"
+                :figwheel {;; :on-jsload "minicosm.core/on-js-reload"
                            ;; :open-urls will pop open your application
                            ;; in the default browser once Figwheel has
                            ;; started and compiled your application.
                            ;; Comment this out once it no longer serves you.
                            :open-urls ["http://localhost:3449/index.html"]}
 
-                :compiler {:main braeburn.demo
+                :compiler {:main minicosm.demo
                            :asset-path "js/compiled/out"
-                           :output-to "resources/public/js/compiled/braeburn.js"
+                           :output-to "resources/public/js/compiled/minicosm.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true
                            ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
@@ -42,8 +42,8 @@
                ;; lein cljsbuild once min
                {:id "min"
                 :source-paths ["src"]
-                :compiler {:output-to "resources/public/js/compiled/braeburn.js"
-                           :main braeburn.core
+                :compiler {:output-to "resources/public/js/compiled/minicosm.js"
+                           :main minicosm.core
                            :optimizations :advanced
                            :pretty-print false}}]}
 
