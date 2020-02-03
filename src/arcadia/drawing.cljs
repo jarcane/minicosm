@@ -6,7 +6,12 @@
       :fillRect (let [[x y w h] args] (.fillRect ctx x y w h))
       :strokeRect (let [[x y w h] args] (.strokeRect ctx x y w h))
       :setFill (set! (.-fillStyle ctx) (first args))
-      :setStroke (set! (.-strokeStyle ctx) (first args)))))
+      :setStroke (set! (.-strokeStyle ctx) (first args))
+      :strokeCirc (let [[x y r] args
+                        pi js/Math.PI]
+                    (.beginPath ctx)
+                    (.ellipse ctx x y r r (/ pi 4) 0 (* 2 pi))
+                    (.stroke ctx)))))
 
 (defn- pad-hex [num]
   (let [as-hex (.toString num 16)]
@@ -41,3 +46,7 @@
   "Returns a command to draw a stroked (outline only) rectangle at the given point and size"
   [x y w h]
   [:strokeRect (+ 0.5 x) (+ 0.5 y) w h])
+
+(defn stroke-circ
+  [x y r]
+  [:strokeCirc (+ 0.5 x) (+ 0.5 y) r])
