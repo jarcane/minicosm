@@ -1,7 +1,7 @@
 (ns minicosm.demo
   (:require [minicosm.core :refer [start!]]
             [minicosm.image :refer [sprite8 sprite16 generate-background]]
-            [minicosm.drawing :refer [filled-rect stroke-rect set-stroke stroke-circ]]))
+            [minicosm.drawing :refer [filled-rect stroke-rect set-stroke set-fill stroke-circ]]))
 
 (def _ 0x00000000)
 (def O 0xFFFFFFFF)
@@ -40,7 +40,8 @@
               {:background background
                :sprites [[sprite x y]]
                :text [["THIS IS A TEST" "white" 16 16]]
-               :draw [(filled-rect 300 200 64 64)
+               :draw [(set-fill O)
+                      (filled-rect 300 200 64 64)
                       (set-stroke O)
                       (stroke-rect 200 150 32 32)
                       (stroke-circ 400 50 32)]})})
