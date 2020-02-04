@@ -3,13 +3,16 @@
 
 (enable-console-print!)
 
-(defn- draw! [ctx {:keys [background sprites text draw] :as graphics}]
+(defn- draw! [ctx {:keys [background sprites text draw]}]
   (when-let [bkg background]
     (.drawImage ctx bkg 0 0))
   (doseq [[spr x y] sprites]
     (.drawImage ctx spr x y))
-  (doseq [[str x y] text]
-    (.fillText ctx str x y))
+  (doseq [[str color x y] text]
+    (let [old-col (.-fillStyle ctx)]
+      (set! (.-fillStyle ctx) color)
+      (.fillText ctx str x y)
+      (set! (.-fillStyle ctx) old-col)))
   (draw-commands! ctx draw))
 
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
@@ -36,7 +39,8 @@
      The graphics-state map may contain any of the following keys:
      {:background A static image to serve as the background
       :sprites An array of tuples, each containing a sprite and its x,y coordinates
-      :text An array of tuples, each containing a string and its x,y coordinates}
+      :text An array of tuples, each containing a string and its x,y coordinates
+      :draw An array of draw commands, each a vector containing the keyword for the command and its arguments}
      Note that the elements of the display will be drawn in the order listed here, first background, then sprites,
      and finally text.}"
   [{:keys [init] :as handlers}]

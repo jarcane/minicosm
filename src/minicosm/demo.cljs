@@ -39,7 +39,7 @@
    :to-draw (fn [[x y]]
               {:background background
                :sprites [[sprite x y]]
-               :text [["THIS IS A TEST" 16 16]]
+               :text [["THIS IS A TEST" "white" 16 16]]
                :draw [(filled-rect 300 200 64 64)
                       (set-stroke O)
                       (stroke-rect 200 150 32 32)
