@@ -3,6 +3,8 @@
             [minicosm.image :refer [sprite8 sprite16 generate-background]]
             [minicosm.drawing :refer [filled-rect stroke-rect set-stroke set-fill stroke-circ]]))
 
+(enable-console-print!)
+
 (def _ 0x00000000)
 (def O 0xFFFFFFFF)
 (def X 0xFF000000)

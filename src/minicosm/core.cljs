@@ -2,20 +2,6 @@
   (:require [minicosm.drawing :refer [draw-commands!]]
             [minicosm.ddn :refer [render!]]))
 
-(enable-console-print!)
-
-(defn- draw! [ctx {:keys [background sprites text draw]}]
-  (when-let [bkg background]
-    (.drawImage ctx bkg 0 0))
-  (doseq [[spr x y] sprites]
-    (.drawImage ctx spr x y))
-  (doseq [[str color x y] text]
-    (let [old-col (.-fillStyle ctx)]
-      (set! (.-fillStyle ctx) color)
-      (.fillText ctx str x y)
-      (set! (.-fillStyle ctx) old-col)))
-  (draw-commands! ctx draw))
-
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)

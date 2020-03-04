@@ -49,6 +49,6 @@
   (.drawImage ctx sprite x y))
 
 (defn render! 
-  "Given a canvas context and a DDN :canvas element, render the specified graphics to the canvas"
+  "Given a canvas context and a DDN element, render the specified element to the canvas"
   [ctx ddn]
   (ddn-elem ctx ddn))
