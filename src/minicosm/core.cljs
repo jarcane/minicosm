@@ -1,5 +1,6 @@
 (ns minicosm.core
-  (:require [minicosm.drawing :refer [draw-commands!]]))
+  (:require [minicosm.drawing :refer [draw-commands!]]
+            [minicosm.ddn :refer [render!]]))
 
 (enable-console-print!)
 
@@ -20,7 +21,7 @@
                       (on-key @key-evs)
                       (on-tick t))]
     (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
-    (draw! ctx (to-draw new-state))
+    (render! ctx (to-draw new-state))
     (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state handlers)))))
 
 (defn start!

@@ -26,6 +26,16 @@
 
 (def background (generate-background 512 385 16 make-stars))
 
+(defn draw [[x y]]
+  [:canvas {}
+   [:image {:pos [0 0]} background]
+   [:sprite {:pos [x y]} sprite]
+   #_[:text {:pos [32 32] :style :fill :color "white"} "THIS IS A TEST"]
+   #_[:group {:desc "lines"}
+    [:rect {:style :fill :pos [300 200] :dim [64 32]}]
+    [:rect {:pos [200 150] :dim 32}]
+    [:circ {:pos [400 50] :r 32}]]])
+
 (def game-handlers
   {:init (fn [] [128 128])
    :on-key (fn [[x y] key-evs]
@@ -36,14 +46,6 @@
                (key-evs "ArrowRight") [(+ x 3) y]
                :else [x y]))
    :on-tick (fn [state _] state)
-   :to-draw (fn [[x y]]
-              {:background background
-               :sprites [[sprite x y]]
-               :text [["THIS IS A TEST" "white" 16 16]]
-               :draw [(set-fill O)
-                      (filled-rect 300 200 64 64)
-                      (set-stroke O)
-                      (stroke-rect 200 150 32 32)
-                      (stroke-circ 400 50 32)]})})
+   :to-draw draw})
 
 (start! game-handlers)

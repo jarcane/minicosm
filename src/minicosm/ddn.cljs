@@ -5,7 +5,7 @@
   (fn [_ [k & _]] k))
 
 (defmethod ddn-elem :default invalid-elem [_ [k & _]]
-  (throw js/Error. (str "Unrecognized elem: " k)))
+  (throw (js/Error. (str "Unrecognized elem: " k))))
 
 (defmethod ddn-elem :canvas canvas [ctx [_ opts & elems]]
   (doseq [e elems]
@@ -40,6 +40,9 @@
                  sh (- y2 y1)]
              (.drawImage ctx cvs x1 y1 sw sh x y))
       :else (.drawImage ctx cvs x y))))
+
+(defmethod ddn-elem :sprite sprite [ctx [_ {[x y] :pos} sprite]]
+  (.drawImage ctx sprite x y))
 
 (defn render! 
   "Given a canvas context and a DDN :canvas element, render the specified graphics to the canvas"
