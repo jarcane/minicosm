@@ -38,7 +38,7 @@
    #_ [:image {:pos [0 0]} background]
    [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} sprite]
-   #_[:text {:pos [32 32] :style :fill :color "white"} "THIS IS A TEST"]
+   [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
    #_[:group {:desc "lines"}
       [:rect {:style :fill :pos [300 200] :dim [64 32]}]
       [:rect {:pos [200 150] :dim 32}]

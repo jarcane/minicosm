@@ -54,9 +54,8 @@ DDN defines a number of common elements, described as follows, with their option
     - `:view` (optional) - Defines a sub-section of the map to be drawn, as a pair of pairs of x/y coordinates (ie. `[[x1 y1] [x2 y2]]). Note that this is by pixel, not tile, to allow for smooth scrolling of partial tiles. If not provided the whole map is drawn.
 * `:sprite` - A sprite to be drawn. Contents should contain an image value. Options:
     - `:pos` - A pair of coordinates at which to draw the sprite (ie. `[x y]`).
-* `:text` - Indicates text to be drawn. Contents should be a string. Options:
+* `:text` - Indicates text to be drawn. Contents should be a string or series of strings. Options:
     - `:pos` - a pair indicating the x/y coordinates at which to begin drawing the text.
-    - `:style` (optional): A keyword to indicate the style of text to be drawn, either `:fill` for filled text, or `:stroke` for outline only. Default is `:fill`.
     - `:color`: a string containing the CSS color value of the text.
     - `:font`: a string containing the CSS font value for the text.
 * `:rect` - A rectangle to be drawn on screen. Options:
