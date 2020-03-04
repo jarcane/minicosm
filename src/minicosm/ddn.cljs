@@ -90,6 +90,21 @@
               (when color (set! (.-fillStyle ctx) old-color))))
     (.closePath ctx)))
 
+(defmethod ddn-elem :line line [ctx [_ {:keys [from to width color]}]]
+  (let [[x1 y1] from
+        [x2 y2] to
+        old-width (.-lineWidth ctx)
+        old-color (.-strokeStyle ctx)]
+    (when width (set! (.-lineWidth ctx) width))
+    (when color (set! (.-strokeStyle ctx) color))
+    (.beginPath ctx)
+    (.moveTo ctx x1 y1)
+    (.lineTo ctx x2 y2)
+    (.stroke ctx)
+    (.closePath ctx)
+    (when width (set! (.-lineWidth ctx) old-width))
+    (when color (set! (.-strokeStyle ctx) old-color))))
+
 (defn render! 
   "Given a canvas context and a DDN element, render the specified element to the canvas"
   [ctx ddn]
