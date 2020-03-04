@@ -25,16 +25,3 @@
   "Given an array of 256 color values, returns a 16x16 sprite"
   [arr]
   (make-sprite arr 16))
-
-(defn generate-background 
-  "Given width, height, tile size in pixelse, and  a function that returns a 16x16 sprite, 
-   generates a full-screen background image"
-  [w h sprite-size tile-fn]
-  (let [cvs (js/document.createElement "canvas")
-        ctx (.getContext cvs "2d")]
-    (set! (.. ctx -canvas -width) w)
-    (set! (.. ctx -canvas -height) h)
-    (doseq [x (range 0 w sprite-size)
-            y (range 0 h sprite-size)]
-      (.drawImage ctx (tile-fn) x y))
-    cvs))

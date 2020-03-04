@@ -1,7 +1,6 @@
 (ns minicosm.demo
   (:require [minicosm.core :refer [start!]]
-            [minicosm.image :refer [sprite8 sprite16 generate-background]]
-            [minicosm.drawing :refer [filled-rect stroke-rect set-stroke set-fill stroke-circ]]))
+            [minicosm.image :refer [sprite8 sprite16]]))
 
 (enable-console-print!)
 
@@ -25,8 +24,6 @@
      (if (< (rand) 0.005)
        O
        X))))
-
-(def background (generate-background 512 385 16 make-stars))
 
 (def tilemap 
   (for [y (range 24)]
