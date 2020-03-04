@@ -42,7 +42,7 @@
    [:group {:desc "lines"}
     [:rect {:style :fill :pos [300 200] :dim [64 32] :color "white"}]
     [:rect {:pos [200 150] :dim [32 32] :color "white"}]
-    #_[:circ {:pos [400 50] :r 32}]]])
+    [:circ {:pos [400 50] :r [32 32] :color "white"}]]])
 
 (def game-handlers
   {:init (fn [] [128 128])

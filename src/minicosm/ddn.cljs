@@ -72,6 +72,24 @@
                 (.strokeRect ctx (+ 0.5 x) (+ 0.5 y) w h)
                 (when color (set! (.-strokeStyle ctx) old-color))))))
 
+(defmethod ddn-elem :circ circ [ctx [_ {:keys [pos r style color] :or {style :stroke}}]]
+  (let [[x y] pos
+        [rx ry] r
+        pi js/Math.PI]
+    (.beginPath ctx)
+    (case style 
+      :stroke (let [old-color (.-strokeStyle ctx)]
+                (when color (set! (.-strokeStyle ctx) color))
+                (.ellipse ctx x y rx ry (/ pi 4) 0 (* 2 pi))
+                (.stroke ctx)
+                (when color (set! (.-strokeStyle ctx) old-color)))
+      :fill (let [old-color (.-fillStyle ctx)]
+              (when color (set! (.-fillStyle ctx) color))
+              (.ellipse ctx x y rx ry (/ pi 4) 0 (* 2 pi))
+              (.fill ctx)
+              (when color (set! (.-fillStyle ctx) old-color))))
+    (.closePath ctx)))
+
 (defn render! 
   "Given a canvas context and a DDN element, render the specified element to the canvas"
   [ctx ddn]
