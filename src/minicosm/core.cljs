@@ -1,6 +1,5 @@
 (ns minicosm.core
-  (:require [minicosm.drawing :refer [draw-commands!]]
-            [minicosm.ddn :refer [render!]]))
+  (:require [minicosm.ddn :refer [render!]]))
 
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
