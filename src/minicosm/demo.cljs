@@ -32,7 +32,6 @@
 
 (defn draw [[x y]]
   [:canvas {}
-   #_ [:image {:pos [0 0]} background]
    [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} sprite]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
