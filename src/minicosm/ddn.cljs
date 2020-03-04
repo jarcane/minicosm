@@ -24,6 +24,23 @@
              (.drawImage ctx img x1 y1 sw sh x y))
       :else (.drawImage ctx img x y))))
 
+(defmethod ddn-elem :map map [ctx [_ {:keys [pos dim size view] :or {pos [0 0]}} map]]
+  (let [[x y] pos
+        [tw th] dim
+        cvs (js/document.createElement "canvas")
+        tctx (.getContext cvs "2d")
+        tiles (to-array-2d map)]
+    (doseq [x (range 0 tw)
+            y (range 0 th)]
+      (let [tile (aget tiles y x)]
+        (.drawImage tctx tile (* x size) (* y size))))
+    (cond
+      view (let [[[x1 y1] [x2 y2]] view
+                 sw (- x2 x1)
+                 sh (- y2 y1)]
+             (.drawImage ctx cvs x1 y1 sw sh x y))
+      :else (.drawImage ctx cvs x y))))
+
 (defn render! 
   "Given a canvas context and a DDN :canvas element, render the specified graphics to the canvas"
   [ctx ddn]
