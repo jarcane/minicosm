@@ -27,9 +27,13 @@
 (defmethod ddn-elem :map map [ctx [_ {:keys [pos dim size view] :or {pos [0 0]}} map]]
   (let [[x y] pos
         [tw th] dim
+        w (* tw size)
+        h (* th size)
         cvs (js/document.createElement "canvas")
         tctx (.getContext cvs "2d")
         tiles (to-array-2d map)]
+    (set! (.. tctx -canvas -width) w)
+    (set! (.. tctx -canvas -height) h)
     (doseq [x (range 0 tw)
             y (range 0 th)]
       (let [tile (aget tiles y x)]
