@@ -15,6 +15,15 @@
   (doseq [e elems]
     (ddn-elem ctx e)))
 
+(defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]}} img]]
+  (let [[x y] pos]
+    (cond
+      view (let [[[x1 y1] [x2 y2]] view
+                 sw (- x2 x1)
+                 sh (- y2 y1)]
+             (.drawImage ctx img x1 y1 sw sh x y))
+      :else (.drawImage ctx img x y))))
+
 (defn render! 
   "Given a canvas context and a DDN :canvas element, render the specified graphics to the canvas"
   [ctx ddn]
