@@ -39,10 +39,10 @@
    [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} sprite]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
-   #_[:group {:desc "lines"}
-      [:rect {:style :fill :pos [300 200] :dim [64 32]}]
-      [:rect {:pos [200 150] :dim 32}]
-      [:circ {:pos [400 50] :r 32}]]])
+   [:group {:desc "lines"}
+    [:rect {:style :fill :pos [300 200] :dim [64 32] :color "white"}]
+    [:rect {:pos [200 150] :dim [32 32] :color "white"}]
+    #_[:circ {:pos [400 50] :r 32}]]])
 
 (def game-handlers
   {:init (fn [] [128 128])

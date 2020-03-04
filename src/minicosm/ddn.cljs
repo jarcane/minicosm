@@ -48,7 +48,7 @@
 (defmethod ddn-elem :sprite sprite [ctx [_ {[x y] :pos} sprite]]
   (.drawImage ctx sprite x y))
 
-(defmethod ddn-elem :text text [ctx [_ {:keys [pos color font] :or {pos [0 0]}} & strings]]
+(defmethod ddn-elem :text text [ctx [_ {:keys [pos color font]} & strings]]
   (let [[x y] pos
         old-color (.-fillStyle ctx)
         old-font (.-font ctx)]
@@ -58,6 +58,19 @@
     (.fillText ctx (apply str strings) x y)
     (when color (set! (.-fillStyle ctx) old-color))
     (when font (set! (.-font ctx) old-font))))
+
+(defmethod ddn-elem :rect rect [ctx [_ {:keys [pos dim style color] :or {style :stroke}}]]
+  (let [[x y] pos
+        [w h] dim]
+    (case style
+      :fill (let [old-color (.-fillStyle ctx)]
+              (when color (set! (.-fillStyle ctx) color))
+              (.fillRect ctx (+ 0.5 x) (+ 0.5 y) w h)
+              (when color (set! (.-fillStyle ctx) old-color)))
+      :stroke (let [old-color (.-strokeStyle ctx)]
+                (when color (set! (.-strokeStyle ctx) color))
+                (.strokeRect ctx (+ 0.5 x) (+ 0.5 y) w h)
+                (when color (set! (.-strokeStyle ctx) old-color))))))
 
 (defn render! 
   "Given a canvas context and a DDN element, render the specified element to the canvas"
