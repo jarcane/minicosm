@@ -1,18 +1,59 @@
 (ns minicosm.core
   (:require [minicosm.ddn :refer [render!]]))
 
-(defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
+(defn- make-callback
+  [url key counts]
+  (fn [_]
+    (println (name key) url)
+    (swap! counts update key inc)))
+
+(defn- url-to-img [url counts]
+  (let [img (js/Image.)]
+    (set! (.-onload img) (make-callback url :loaded counts))
+    (set! (.-onerror img) (make-callback url :error counts))
+    (set! (.-src img) url)
+    img))
+
+(defn- draw-loading [ctx]
+  (let [w (.. ctx -canvas -width)
+        h (.. ctx -canvas -height)
+        old-ta (.-textAlign ctx)]
+    (.clearRect ctx 0 0 w h)
+    (set! (.-textAlign ctx) "center")
+    (.fillText ctx "Loading..." (/ w 2) (/ h 2))
+    (set! (.-textAlign ctx) old-ta)))
+
+(defn- asset-loader
+  ([ctx done-fn assets]
+   (let [counts (atom {:loaded 0
+                       :error 0
+                       :total (count assets)})
+         to-images (into {} (map (fn [[k v]] [k (url-to-img v counts)]) assets))]
+     (draw-loading ctx)
+     (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn to-images counts)))))
+  ([ctx done-fn assets counts]
+   (let [{:keys [loaded error total]} @counts]
+     (if (= (+ loaded error)
+            total)
+       (done-fn assets)
+       (do 
+         (draw-loading ctx)
+         (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn assets counts))))))))
+
+(defn- game-loop! [t ctx key-evs state assets {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
     (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
-    (render! ctx (to-draw new-state))
-    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state handlers)))))
+    (render! ctx (to-draw new-state assets))
+    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets handlers)))))
 
 (defn start!
   "Initiates the main game loop. Expects a map of handler functions with the following keys:
   {:init (fn [] state) 
      A function that returns the initial game state, run before the loop starts
+   :assets (fn [] assets)
+     A function that returns a map of keys to asset urls, to be loaded into memory.
    :on-key (fn [state keys] state)
      A function that takes the current game state, and a set of current key codes pressed, and returns a new
      game state
@@ -29,11 +70,12 @@
       :draw An array of draw commands, each a vector containing the keyword for the command and its arguments}
      Note that the elements of the display will be drawn in the order listed here, first background, then sprites,
      and finally text.}"
-  [{:keys [init] :as handlers}]
+  [{:keys [init assets] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
-        init-state (init)]
+        init-state (init)
+        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded handlers))]
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
-    (game-loop! 0 ctx key-evs init-state handlers)))
+    (asset-loader ctx done-fn (assets))))
