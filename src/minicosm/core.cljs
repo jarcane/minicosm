@@ -1,6 +1,41 @@
 (ns minicosm.core
   (:require [minicosm.ddn :refer [render!]]))
 
+(defn- url-to-img [url on-load on-error]
+  (let [img (js/Image.)]
+    (set! (.-onload img) on-load)
+    (set! (.-onerror img) on-error)
+    (set! (.-src img) url)
+    img))
+
+(defn- draw-loading [ctx]
+  (let [w (.. ctx -canvas -width)
+        h (.. ctx -canvas -height)
+        old-ta (.-textAlign ctx)]
+    (.clearRect 0 0 w h)
+    (set! (.-textAlign ctx) "center")
+    (.fillText ctx "Loading..." (/ w 2) (/ h 2))
+    (set! (.-textAlign ctx) old-ta)))
+
+(defn- asset-loader
+  ([ctx assets]
+   (let [counts (atom {:loaded 0
+                       :error 0
+                       :total (count assets)})
+         on-load (fn [] (swap! counts update :loaded inc))
+         on-error (fn [] (swap! counts update :error inc))
+         to-images (into {} (map (fn [[k v]] [k (url-to-img v on-load on-error)]) assets))]
+     (draw-loading ctx)
+     (js/requestAnimationFrame (fn [] (asset-loader ctx to-images counts)))))
+  ([ctx assets counts]
+   (let [{:keys [loaded error total]} @counts]
+     (if (= (+ loaded error)
+            total)
+       assets
+       (do 
+         (draw-loading ctx)
+         (js/requestAnimationFrame (fn [] (asset-loader ctx assets counts))))))))
+
 (defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
