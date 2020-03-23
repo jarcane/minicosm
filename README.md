@@ -14,12 +14,14 @@ The handler map should contain the following keys, each containing a function wi
 
 * `:init (fn [] state)` - 
     A function that returns the initial game state, run before the loop starts
+* `:assets (fn [] assets)` -
+     A function that returns a map of keys to image asset urls, and returns a map of the same keys to `Image` objects. These images will first be loaded into memory *before* the main game loop begins
 * `:on-key (fn [state keys] state)` - 
     A function that takes the current game state, and a set of current key codes pressed, and returns a new game state
 * `:on-tick (fn [state time] state)` -
     A function that takes the current game state, and a DOMHighResTimeStamp, indicating the number of ms since time origin (https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin). Runs every frame, approx. 60fps. Returns a new game state.
-* `:to-draw (fn [state] ddn)` -
-    A function that takes the current game state, and returns a DDN vector of the graphics to be drawn. 
+* `:to-draw (fn [state assets] ddn)` -
+    A function that takes the current game state and the image asset map, and returns a DDN vector of the graphics to be drawn. 
 
 ## DDN - the drawing language
 
