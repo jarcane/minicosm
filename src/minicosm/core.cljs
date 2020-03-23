@@ -1,10 +1,16 @@
 (ns minicosm.core
   (:require [minicosm.ddn :refer [render!]]))
 
-(defn- url-to-img [url on-load on-error]
+(defn- make-callback
+  [url key counts]
+  (fn [_]
+    (println (name key) url)
+    (swap! counts update key inc)))
+
+(defn- url-to-img [url counts]
   (let [img (js/Image.)]
-    (set! (.-onload img) (fn [] (println "loaded " url) (on-load)))
-    (set! (.-onerror img) (fn [] (println "error loading " url) (on-error)))
+    (set! (.-onload img) (make-callback url :loaded counts))
+    (set! (.-onerror img) (make-callback url :error counts))
     (set! (.-src img) url)
     img))
 
@@ -22,9 +28,7 @@
    (let [counts (atom {:loaded 0
                        :error 0
                        :total (count assets)})
-         on-load (fn [] (swap! counts update :loaded inc))
-         on-error (fn [] (swap! counts update :error inc))
-         to-images (into {} (map (fn [[k v]] [k (url-to-img v on-load on-error)]) assets))]
+         to-images (into {} (map (fn [[k v]] [k (url-to-img v counts)]) assets))]
      (draw-loading ctx)
      (js/requestAnimationFrame (fn [_] (asset-loader ctx to-images counts)))))
   ([ctx assets counts]
