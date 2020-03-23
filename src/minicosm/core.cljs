@@ -26,7 +26,7 @@
          on-error (fn [] (swap! counts update :error inc))
          to-images (into {} (map (fn [[k v]] [k (url-to-img v on-load on-error)]) assets))]
      (draw-loading ctx)
-     (js/requestAnimationFrame (fn [] (asset-loader ctx to-images counts)))))
+     (js/requestAnimationFrame (fn [_] (asset-loader ctx to-images counts)))))
   ([ctx assets counts]
    (let [{:keys [loaded error total]} @counts]
      (if (= (+ loaded error)
@@ -34,7 +34,7 @@
        assets
        (do 
          (draw-loading ctx)
-         (js/requestAnimationFrame (fn [] (asset-loader ctx assets counts))))))))
+         (js/requestAnimationFrame (fn [_] (asset-loader ctx assets counts))))))))
 
 (defn- game-loop! [t ctx key-evs state assets {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
