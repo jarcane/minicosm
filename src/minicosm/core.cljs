@@ -3,8 +3,8 @@
 
 (defn- url-to-img [url on-load on-error]
   (let [img (js/Image.)]
-    (set! (.-onload img) on-load)
-    (set! (.-onerror img) on-error)
+    (set! (.-onload img) (fn [] (println "loaded " url) (on-load)))
+    (set! (.-onerror img) (fn [] (println "error loading " url) (on-error)))
     (set! (.-src img) url)
     img))
 
@@ -12,7 +12,7 @@
   (let [w (.. ctx -canvas -width)
         h (.. ctx -canvas -height)
         old-ta (.-textAlign ctx)]
-    (.clearRect 0 0 w h)
+    (.clearRect ctx 0 0 w h)
     (set! (.-textAlign ctx) "center")
     (.fillText ctx "Loading..." (/ w 2) (/ h 2))
     (set! (.-textAlign ctx) old-ta)))
@@ -36,18 +36,20 @@
          (draw-loading ctx)
          (js/requestAnimationFrame (fn [] (asset-loader ctx assets counts))))))))
 
-(defn- game-loop! [t ctx key-evs state {:keys [on-key on-tick to-draw] :as handlers}]
+(defn- game-loop! [t ctx key-evs state assets {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
     (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
-    (render! ctx (to-draw new-state))
-    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state handlers)))))
+    (render! ctx (to-draw new-state assets))
+    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets handlers)))))
 
 (defn start!
   "Initiates the main game loop. Expects a map of handler functions with the following keys:
   {:init (fn [] state) 
      A function that returns the initial game state, run before the loop starts
+   :assets (fn [] assets)
+     A function that returns a map of keys to asset urls, to be loaded into memory.
    :on-key (fn [state keys] state)
      A function that takes the current game state, and a set of current key codes pressed, and returns a new
      game state
@@ -64,11 +66,12 @@
       :draw An array of draw commands, each a vector containing the keyword for the command and its arguments}
      Note that the elements of the display will be drawn in the order listed here, first background, then sprites,
      and finally text.}"
-  [{:keys [init] :as handlers}]
+  [{:keys [init assets] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
-        init-state (init)]
+        init-state (init)
+        assets-loaded (asset-loader ctx (assets))]
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
-    (game-loop! 0 ctx key-evs init-state handlers)))
+    (game-loop! 0 ctx key-evs init-state assets-loaded handlers)))

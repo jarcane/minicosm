@@ -30,9 +30,10 @@
     (for [x (range 32)]
       (make-stars))))
 
-(defn draw [[x y]]
+(defn draw [[x y] assets]
   [:canvas {}
-   [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
+   [:image {:pos [0 0]} (:space assets)]
+   #_ [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} sprite]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
    [:group {:desc "lines"}
@@ -43,6 +44,7 @@
 
 (def game-handlers
   {:init (fn [] [128 128])
+   :assets (fn [] {:space "https://images.pexels.com/photos/957010/milky-way-starry-sky-night-sky-star-957010.jpeg"})
    :on-key (fn [[x y] key-evs]
              (cond
                (key-evs "ArrowUp") [x (- y 3)]
