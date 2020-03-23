@@ -24,21 +24,21 @@
     (set! (.-textAlign ctx) old-ta)))
 
 (defn- asset-loader
-  ([ctx assets]
+  ([ctx done-fn assets]
    (let [counts (atom {:loaded 0
                        :error 0
                        :total (count assets)})
          to-images (into {} (map (fn [[k v]] [k (url-to-img v counts)]) assets))]
      (draw-loading ctx)
-     (js/requestAnimationFrame (fn [_] (asset-loader ctx to-images counts)))))
-  ([ctx assets counts]
+     (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn to-images counts)))))
+  ([ctx done-fn assets counts]
    (let [{:keys [loaded error total]} @counts]
      (if (= (+ loaded error)
             total)
-       assets
+       (done-fn assets)
        (do 
          (draw-loading ctx)
-         (js/requestAnimationFrame (fn [_] (asset-loader ctx assets counts))))))))
+         (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn assets counts))))))))
 
 (defn- game-loop! [t ctx key-evs state assets {:keys [on-key on-tick to-draw] :as handlers}]
   (let [new-state (-> state
@@ -75,7 +75,7 @@
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
         init-state (init)
-        assets-loaded (asset-loader ctx (assets))]
+        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded handlers))]
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
-    (game-loop! 0 ctx key-evs init-state assets-loaded handlers)))
+    (asset-loader ctx done-fn (assets))))
