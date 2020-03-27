@@ -14,8 +14,8 @@
                        :color (rand-nth ["white" "white" "white" "yellow" "blue" "red"])}]))]))
 
 (def tilemap
-  (for [y (range 24)]
-    (for [x (range 32)]
+  (for [_ (range 24)]
+    (for [_ (range 32)]
       (make-stars))))
 
 (defn draw [[x y] assets]
