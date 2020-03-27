@@ -7,13 +7,6 @@
 (defmethod ddn-elem :default invalid-elem [_ [k & _]]
   (throw (js/Error. (str "Unrecognized elem: " k))))
 
-(defmethod ddn-elem :canvas canvas [ctx [_ opts & elems]]
-  (if (coll? (first (first elems)))
-    (doseq [e (first elems)]
-      (ddn-elem ctx e))
-    (doseq [e elems]
-      (ddn-elem ctx e))))
-
 (defmethod ddn-elem :group group [ctx [_ opts & elems]]
   (if (coll? (first (first elems)))
     (doseq [e (first elems)]
