@@ -76,6 +76,9 @@ DDN defines a number of common elements, described as follows, with their option
     - `:to`
     - `:width`
     - `:color`
+* `:point` - A single pixel point. 
+    - `:pos` - A pair of x/y coordinates (eg. `[45 12]`).
+    - `:color` - A string containing a CSS color value.
 
 ## Development
 
