@@ -62,20 +62,20 @@ DDN defines a number of common elements, described as follows, with their option
     - `:color`: a string containing the CSS color value of the text.
     - `:font`: a string containing the CSS font value for the text.
 * `:rect` - A rectangle to be drawn on screen. Options:
-    - `:pos`
-    - `:dim`
-    - `:style`
-    - `:color`
+    - `:pos` - a pair indicating the x/y coordinates of the origin point of the rectangle
+    - `:dim` - a pair indicating the width and height (`[w h]`) of the rect
+    - `:style` - One of either `:stroke` (line only) or `:fill` (filled rect)
+    - `:color` - A CSS color value for the color of the rect
 * `:circ` - A circle or ellipse. Options:
-    - `:pos`
-    - `:r`
-    - `:style`
-    - `:color`
+    - `:pos` - a pair indicating the x/y coords of the center of the circ
+    - `:r` - A pair indicating the major/minor (horizontal/vertical) radius of the circ
+    - `:style` - One of either `:stroke` (line only) or `:fill` (filled circ)
+    - `:color` - A CSS color value for the color of the circ
 * `:line` - A line to be drawn. Options:
-    - `:from`
-    - `:to`
-    - `:width`
-    - `:color`
+    - `:from` - a pair of x/y coordinates for the origin of the line
+    - `:to` - a pair of x/y coords for the endpoint of the line
+    - `:width` - the width of the line in pixels
+    - `:color` - a CSS color value for the color of the line
 * `:point` - A single pixel point. 
     - `:pos` - A pair of x/y coordinates (eg. `[45 12]`).
     - `:color` - A string containing a CSS color value.
