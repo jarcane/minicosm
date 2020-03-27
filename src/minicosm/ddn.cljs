@@ -65,7 +65,7 @@
     (case style
       :fill (let [old-color (.-fillStyle ctx)]
               (when color (set! (.-fillStyle ctx) color))
-              (.fillRect ctx (+ 0.5 x) (+ 0.5 y) w h)
+              (.fillRect ctx x y w h)
               (when color (set! (.-fillStyle ctx) old-color)))
       :stroke (let [old-color (.-strokeStyle ctx)]
                 (when color (set! (.-strokeStyle ctx) color))
@@ -109,7 +109,7 @@
   (let [[x y] pos
         old-color (.-fillStyle ctx)]
     (when color (set! (.-fillStyle ctx) color))
-    (.fillRect (+ 0.5 x) (+ 0.5 y) 1 1)
+    (.fillRect ctx x y 1 1)
     (when color (set! (.-fillStyle ctx) old-color))))
 
 (defn render! 
