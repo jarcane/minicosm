@@ -8,12 +8,18 @@
   (throw (js/Error. (str "Unrecognized elem: " k))))
 
 (defmethod ddn-elem :canvas canvas [ctx [_ opts & elems]]
-  (doseq [e elems]
-    (ddn-elem ctx e)))
+  (if (coll? (first (first elems)))
+    (doseq [e (first elems)]
+      (ddn-elem ctx e))
+    (doseq [e elems]
+      (ddn-elem ctx e))))
 
 (defmethod ddn-elem :group group [ctx [_ opts & elems]]
-  (doseq [e elems]
-    (ddn-elem ctx e)))
+  (if (coll? (first (first elems)))
+    (doseq [e (first elems)]
+      (ddn-elem ctx e))
+    (doseq [e elems]
+      (ddn-elem ctx e))))
 
 (defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]}} img]]
   (let [[x y] pos]

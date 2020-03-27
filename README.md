@@ -44,8 +44,8 @@ An example from the demo:
 
 DDN defines a number of common elements, described as follows, with their options.
 
-* `:canvas` - The root element of the canvas itself. Has no options, but contains multiple child elements which will be drawn sequentially to the canvas. The `:to-draw` handler given to `minicosm.core/start!` expects to find one of these.
-* `:group` - A grouping of multiple elements to be drawn. This is primarily useful for providing a single value that can be returned by functions, containing a series of elements to be drawn. Options:
+* `:canvas` - The root element of the canvas itself. Has no options, but the body must contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. The `:to-draw` handler given to `minicosm.core/start!` expects to find one of these.
+* `:group` - A grouping of multiple elements to be drawn. This is primarily useful for providing a single value that can be returned by functions, containing a series of elements to be drawn. The body should contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. Options:
     - `:desc` (optional) - a string describing the nature of the group. useful for documentation purposes.
 * `:image` - A static image to be drawn. The contents of the element should be an image value. Options:
     - `:pos` (optional) - the coordinates at which to place the image, as a pair of coordinates (ie. `[x y]`). If not provided, assumes `[0 0]` coordinates.

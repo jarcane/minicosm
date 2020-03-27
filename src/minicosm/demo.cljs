@@ -8,10 +8,10 @@
   (render-to-canvas 16 16
    [:canvas {}
     [:rect {:pos [0 0] :dim [16 16] :color "black" :style :fill}]
-    (concat [:group {}]
-            (for [_ (range 3)]
-              [:point {:pos [(rand-int 16) (rand-int 16)] 
-                       :color (rand-nth ["white" "white" "white" "yellow" "PaleTurquoise" "orange"])}]))]))
+    [:group {}
+     (for [_ (range 3)]
+       [:point {:pos [(rand-int 16) (rand-int 16)]
+                :color (rand-nth ["white" "white" "white" "yellow" "PaleTurquoise" "orange"])}])]]))
 
 (def tilemap
   (for [_ (range 24)]
