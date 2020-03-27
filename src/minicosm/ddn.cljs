@@ -105,7 +105,25 @@
     (when width (set! (.-lineWidth ctx) old-width))
     (when color (set! (.-strokeStyle ctx) old-color))))
 
+(defmethod ddn-elem :point point [ctx [_ {:keys [pos color]}]]
+  (let [[x y] pos
+        old-color (.-fillStyle ctx)]
+    (when color (set! (.-fillStyle ctx) color))
+    (.fillRect (+ 0.5 x) (+ 0.5 y) 1 1)
+    (when color (set! (.-fillStyle ctx) old-color))))
+
 (defn render! 
   "Given a canvas context and a DDN element, render the specified element to the canvas"
   [ctx ddn]
   (ddn-elem ctx ddn))
+
+(defn render-to-canvas
+  "Given width, height, and a DDN element, creates a canvas, renders the element, 
+   and returns the canvas"
+  [w h ddn]
+  (let [cvs (js/document.createElement "canvas")
+        ctx (.getContext cvs "2d")]
+    (set! (.-width cvs) w)
+    (set! (.-height cvs) h)
+    (render! ctx ddn)
+    cvs))
