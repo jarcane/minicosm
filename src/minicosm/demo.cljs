@@ -20,7 +20,6 @@
 
 (defn draw [[x y] assets]
   [:canvas {}
-   #_ [:image {:pos [0 0]} (:space assets)]
    [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} (:ship assets)]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
@@ -33,8 +32,7 @@
 
 (def game-handlers
   {:init (fn [] [128 128])
-   :assets (fn [] {:space "/img/starfield.gif"
-                   :ship "/img/shuttle.png"})
+   :assets (fn [] {:ship "/img/shuttle.png"})
    :on-key (fn [[x y] key-evs]
              (cond
                (key-evs "ArrowUp") [x (- y 3)]
