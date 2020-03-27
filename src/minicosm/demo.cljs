@@ -11,7 +11,7 @@
     (concat [:group {}]
             (for [_ (range 3)]
               [:point {:pos [(rand-int 16) (rand-int 16)] 
-                       :color (rand-nth ["white" "white" "white" "yellow" "blue" "red"])}]))]))
+                       :color (rand-nth ["white" "white" "white" "yellow" "PaleTurquoise" "orange"])}]))]))
 
 (def tilemap
   (for [_ (range 24)]
