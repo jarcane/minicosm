@@ -62,14 +62,7 @@
      time origin (https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin).
      Runs every frame, approx. 60fps. Returns a new game state.
    :to-draw (fn [state] graphics-state)
-     A function that takes the current game state, and returns a map of the graphics state to be be drawn.
-     The graphics-state map may contain any of the following keys:
-     {:background A static image to serve as the background
-      :sprites An array of tuples, each containing a sprite and its x,y coordinates
-      :text An array of tuples, each containing a string and its x,y coordinates
-      :draw An array of draw commands, each a vector containing the keyword for the command and its arguments}
-     Note that the elements of the display will be drawn in the order listed here, first background, then sprites,
-     and finally text.}"
+     A function that takes the current game state, and returns a DDN vector"
   [{:keys [init assets] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
