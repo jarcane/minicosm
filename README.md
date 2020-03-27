@@ -29,23 +29,23 @@ DDN (Drawing Description Notation) is an EDN/Hiccup inspired declarative notatio
 
 An example from the demo: 
 ```clj
-[:canvas {}
- [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
- [:sprite {:pos [x y]} sprite]
- [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
- [:group {:desc "lines"}
-  [:rect {:style :fill :pos [300 200] :dim [64 32] :color "white"}]
-  [:rect {:pos [200 150] :dim [32 32] :color "white"}]
-  [:circ {:pos [400 50] :r [32 32] :color "white"}]
-  [:line {:from [200 64] :to [350 150] :color "white"}]]]
+[:group {:desc "base"}
+   [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
+   [:sprite {:pos [x y]} (:ship assets)]
+   [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
+   [:group {:desc "shapes"}
+    [:rect {:style :fill :pos [300 200] :dim [64 32] :color "white"}]
+    [:rect {:pos [200 150] :dim [32 32] :color "white"}]
+    [:circ {:pos [400 50] :r [32 32] :color "white"}]
+    [:line {:from [200 64] :to [350 150] :color "white"}]
+    [:point {:pos [45 100] :color "purple"}]]]
 ```
 
 ### DDN elements
 
 DDN defines a number of common elements, described as follows, with their options.
 
-* `:canvas` - The root element of the canvas itself. Has no options, but the body must contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. The `:to-draw` handler given to `minicosm.core/start!` expects to find one of these.
-* `:group` - A grouping of multiple elements to be drawn. This is primarily useful for providing a single value that can be returned by functions, containing a series of elements to be drawn. The body should contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. Options:
+* `:group` - A grouping of multiple elements to be drawn. This is useful both as the base element for an entire drawing, or for providing a single value that contains multiple elements to be drawn. The body should contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. Options:
     - `:desc` (optional) - a string describing the nature of the group. useful for documentation purposes.
 * `:image` - A static image to be drawn. The contents of the element should be an image value. Options:
     - `:pos` (optional) - the coordinates at which to place the image, as a pair of coordinates (ie. `[x y]`). If not provided, assumes `[0 0]` coordinates.

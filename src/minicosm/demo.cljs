@@ -6,7 +6,7 @@
 
 (defn make-stars []
   (render-to-canvas 16 16
-   [:canvas {}
+   [:group {}
     [:rect {:pos [0 0] :dim [16 16] :color "black" :style :fill}]
     [:group {}
      (for [_ (range 3)]
@@ -19,11 +19,11 @@
       (make-stars))))
 
 (defn draw [[x y] assets]
-  [:canvas {}
+  [:group {:desc "base"}
    [:map {:pos [0 0] :dim [32 24] :size 16} tilemap]
    [:sprite {:pos [x y]} (:ship assets)]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
-   [:group {:desc "lines"}
+   [:group {:desc "shapes"}
     [:rect {:style :fill :pos [300 200] :dim [64 32] :color "white"}]
     [:rect {:pos [200 150] :dim [32 32] :color "white"}]
     [:circ {:pos [400 50] :r [32 32] :color "white"}]
