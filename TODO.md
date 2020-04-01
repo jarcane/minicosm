@@ -8,7 +8,6 @@ A functional programming orientated game engine
 - [ ] Sound support  
 - [ ] Expanded asset loading support  
 - [ ] Sprite/object scaling  
-- [ ] :path element  
 - [ ] "splitting" sprite/tile sheets  
 
 ### In Progress
@@ -16,4 +15,5 @@ A functional programming orientated game engine
 
 ### Done ✓
 
+- [x] :path element  
 

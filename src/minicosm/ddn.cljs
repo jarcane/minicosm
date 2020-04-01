@@ -104,6 +104,28 @@
     (when width (set! (.-lineWidth ctx) old-width))
     (when color (set! (.-strokeStyle ctx) old-color))))
 
+(defmethod ddn-elem :path path [ctx [_ {:keys [width color style]} [[ox oy] & points]]]
+  (let [old-width (.-lineWidth ctx)
+        old-color (case style 
+                    :stroke (.-strokeStyle ctx)
+                    :fill (.-fillStyle ctx))]
+    (when width (set! (.-lineWidth ctx) width))
+    (when color (case style 
+                  :stroke (set! (.-strokeStyle ctx) color)
+                  :fill (set! (.-fillStyle ctx) color)))
+    (.beginPath ctx)
+    (.moveTo ctx ox oy)
+    (doseq [[x y] points]
+      (.lineTo ctx x y))
+    (case style
+      :stroke (.stroke ctx)
+      :fill (.fill ctx))
+    (.closePath ctx)
+    (when width (set! (.-lineWidth ctx) old-width))
+    (when color (case style
+                  :stroke (set! (.-strokeStyle ctx) color)
+                  :fill (set! (.-fillStyle ctx) color)))))
+
 (defmethod ddn-elem :point point [ctx [_ {:keys [pos color]}]]
   (let [[x y] pos
         old-color (.-fillStyle ctx)]

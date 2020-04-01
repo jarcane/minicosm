@@ -28,7 +28,13 @@
     [:rect {:pos [200 150] :dim [32 32] :color "white"}]
     [:circ {:pos [400 50] :r [32 32] :color "white"}]
     [:line {:from [200 64] :to [350 150] :color "white"}]
-    [:point {:pos [45 100] :color "purple"}]]])
+    [:point {:pos [45 100] :color "purple"}]
+    [:path {:style :fill :color "green"}
+     [[200 200]
+      [250 200]
+      [225 250]
+      [175 250]
+      [200 200]]]]])
 
 (def game-handlers
   {:init (fn [] [128 128])

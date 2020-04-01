@@ -79,6 +79,10 @@ DDN defines a number of common elements, described as follows, with their option
 * `:point` - A single pixel point. 
     - `:pos` - A pair of x/y coordinates (eg. `[45 12]`).
     - `:color` - A string containing a CSS color value.
+* `:path` - A path defining a shape drawn with arbitrary lines. The body should be a vector of x/y pairs, starting from the origin point, and ending with the final point of the shape. 
+    - `:width` - the width in pixels of the lines
+    - `:color` - the CSS color value for the line/fill of the shape
+    - `:style` - one of `:stroke`/`:fill`
 
 ## Development
 
