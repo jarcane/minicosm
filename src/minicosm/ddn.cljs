@@ -123,8 +123,8 @@
     (.closePath ctx)
     (when width (set! (.-lineWidth ctx) old-width))
     (when color (case style
-                  :stroke (set! (.-strokeStyle ctx) color)
-                  :fill (set! (.-fillStyle ctx) color)))))
+                  :stroke (set! (.-strokeStyle ctx) old-color)
+                  :fill (set! (.-fillStyle ctx) old-color)))))
 
 (defmethod ddn-elem :point point [ctx [_ {:keys [pos color]}]]
   (let [[x y] pos
