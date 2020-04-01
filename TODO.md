@@ -9,6 +9,7 @@ A functional programming orientated game engine
 - [ ] Expanded asset loading support  
 - [ ] Sprite/object scaling  
 - [ ] :path element  
+- [ ] "splitting" sprite/tile sheets  
 
 ### In Progress
 
