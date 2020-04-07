@@ -38,7 +38,8 @@
 
 (def game-handlers
   {:init (fn [] [128 128])
-   :assets (fn [] {:ship "/img/shuttle.png"})
+   :assets (fn [] {:ship [:image "/img/shuttle.png"]
+                   :zap [:audio "/audio/zap.wav"]})
    :on-key (fn [[x y] key-evs]
              (cond
                (key-evs "ArrowUp") [x (- y 3)]

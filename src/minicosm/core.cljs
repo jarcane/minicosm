@@ -14,6 +14,17 @@
     (set! (.-src img) url)
     img))
 
+(defn- url-to-audio [url counts]
+  (let [audio (js/Audio. url)]
+    (.addEventListener audio "canplaythrough" (make-callback url :loaded counts))
+    (set! (.-onerror audio) (make-callback url :error counts))
+    audio))
+
+(defn- dispatch-load [[type val] counts]
+  (case type 
+    :image (url-to-img val counts)
+    :audio (url-to-audio val counts)))
+
 (defn- draw-loading [ctx]
   (let [w (.. ctx -canvas -width)
         h (.. ctx -canvas -height)
@@ -28,7 +39,7 @@
    (let [counts (atom {:loaded 0
                        :error 0
                        :total (count assets)})
-         to-images (into {} (map (fn [[k v]] [k (url-to-img v counts)]) assets))]
+         to-images (into {} (map (fn [[k v]] [k (dispatch-load v counts)]) assets))]
      (draw-loading ctx)
      (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn to-images counts)))))
   ([ctx done-fn assets counts]
@@ -53,7 +64,7 @@
   {:init (fn [] state) 
      A function that returns the initial game state, run before the loop starts
    :assets (fn [] assets)
-     A function that returns a map of keys to asset urls, to be loaded into memory.
+     A function that returns a map of keys to asset type/url pairs, to be loaded into memory.
    :on-key (fn [state keys] state)
      A function that takes the current game state, and a set of current key codes pressed, and returns a new
      game state
@@ -61,7 +72,11 @@
      A function that takes the current game state, and a DOMHighResTimeStamp, indicating the number of ms since 
      time origin (https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin).
      Runs every frame, approx. 60fps. Returns a new game state.
-   :to-draw (fn [state] graphics-state)
+   :to-play (fn [state assets] sound-state)
+     A function that taks the current state and assets and returns a map describing sounds to play, in the form:
+     `{:music <sound asset to loop or :stop> :effects [<sound assets to play once>]}`. If the :music key is empty,
+     any currently playing sound will continue.
+   :to-draw (fn [state assets] graphics-state)
      A function that takes the current game state, and returns a DDN vector"
   [{:keys [init assets] :as handlers}]
   (let [canvas (js/document.getElementById "game")

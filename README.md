@@ -15,7 +15,7 @@ The handler map should contain the following keys, each containing a function wi
 * `:init (fn [] state)` - 
     A function that returns the initial game state, run before the loop starts
 * `:assets (fn [] assets)` -
-     A function that returns a map of keys to image asset urls, and returns a map of the same keys to `Image` objects. These images will first be loaded into memory *before* the main game loop begins
+     A function that returns a map of keys to vector pairs of a keyword for asset type (`:image/:audio`) and the url for the asset, and returns a map of the same keys to `Image`/`Audio` objects. These images will first be loaded into memory *before* the main game loop begins
 * `:on-key (fn [state keys] state)` - 
     A function that takes the current game state, and a set of current key codes pressed, and returns a new game state
 * `:on-tick (fn [state time] state)` -
