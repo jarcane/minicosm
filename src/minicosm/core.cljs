@@ -51,13 +51,27 @@
          (draw-loading ctx)
          (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn assets counts))))))))
 
-(defn- game-loop! [t ctx key-evs state assets {:keys [on-key on-tick to-draw] :as handlers}]
+(defn- handle-audio [state assets astate to-play]
+  (let [curr-state (deref astate)
+        is-playing (not (= :stop curr-state))
+        {:keys [music effects]} (to-play state assets is-playing)]
+    (cond
+      (= :stop music) (.pause curr-state)
+      music (do
+              (when (and curr-state is-playing) (.pause curr-state))
+              (reset! astate music)
+              (swap! astate (fn [m] (.play m) m))))
+    (doseq [e effects]
+      (.play e))))
+
+(defn- game-loop! [t ctx key-evs state assets astate {:keys [on-key on-tick to-play to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
     (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
+    (handle-audio state assets astate to-play)
     (render! ctx (to-draw new-state assets))
-    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets handlers)))))
+    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets astate handlers)))))
 
 (defn start!
   "Initiates the main game loop. Expects a map of handler functions with the following keys:
@@ -73,7 +87,8 @@
      time origin (https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin).
      Runs every frame, approx. 60fps. Returns a new game state.
    :to-play (fn [state assets] sound-state)
-     A function that taks the current state and assets and returns a map describing sounds to play, in the form:
+     A function that taks the current state, assets, and a boolean indicating if music is currently playing
+     and returns a map describing sounds to play, in the form:
      `{:music <sound asset to loop or :stop> :effects [<sound assets to play once>]}`. If the :music key is empty,
      any currently playing sound will continue.
    :to-draw (fn [state assets] graphics-state)
@@ -83,7 +98,8 @@
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
         init-state (init)
-        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded handlers))]
+        astate (atom :stop)
+        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded astate handlers))]
     (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
     (asset-loader ctx done-fn (assets))))
