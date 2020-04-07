@@ -60,7 +60,10 @@
       music (do
               (when (and curr-state is-playing) (.pause curr-state))
               (reset! astate music)
-              (swap! astate (fn [m] (.play m) m))))
+              (swap! astate (fn [m] 
+                              (set! (.-loop m) true)
+                              (.play m)
+                              m))))
     (doseq [e effects]
       (.play e))))
 
