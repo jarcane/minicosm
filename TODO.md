@@ -12,10 +12,10 @@ A functional programming orientated game engine
 
 ### In Progress
 
-- [ ] Sound support  
 
 ### Done ✓
 
+- [x] Sound support  
 - [x] :path element  
 - [x] sound asset loading support  
 
