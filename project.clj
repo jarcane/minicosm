@@ -1,4 +1,4 @@
-(defproject minicosm "0.1.1"
+(defproject minicosm "0.1.2"
   :description "A functional-first game engine for the browser" 
   :url "https://github.com/jarcane/minicosm"
   :license {:name "Eclipse Public License"
@@ -14,6 +14,7 @@
             [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
 
   :source-paths ["src"]
+  :jar-exclusions [#".*\.png" #".*\.wav"]
 
   :cljsbuild {:builds
               [{:id "dev"
