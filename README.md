@@ -1,4 +1,5 @@
 # minicosm
+[![Clojars Project](https://img.shields.io/clojars/v/minicosm.svg)](https://clojars.org/minicosm)
 
 A simple functional-first game engine inspired by universe.rkt
 

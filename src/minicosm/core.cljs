@@ -78,6 +78,7 @@
 
 (defn start!
   "Initiates the main game loop. Expects a map of handler functions with the following keys:
+  ```clj
   {:init (fn [] state) 
      A function that returns the initial game state, run before the loop starts
    :assets (fn [] assets)
@@ -95,7 +96,8 @@
      `{:music <sound asset to loop or :stop> :effects [<sound assets to play once>]}`. If the :music key is empty,
      any currently playing sound will continue.
    :to-draw (fn [state assets] graphics-state)
-     A function that takes the current game state, and returns a DDN vector"
+     A function that takes the current game state, and returns a DDN vector
+  ```"
   [{:keys [init assets] :as handlers}]
   (let [canvas (js/document.getElementById "game")
         ctx (.getContext canvas "2d")
