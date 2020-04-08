@@ -1,5 +1,5 @@
-(defproject minicosm "0.1.0-SNAPSHOT"
-  :description "A game engine inspired by classic B&W Macs" 
+(defproject minicosm "0.1.0"
+  :description "A functional-first game engine for the browser" 
   :url "https://github.com/jarcane/minicosm"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
