@@ -7,7 +7,7 @@
 (defmethod ddn-elem :default invalid-elem [_ [k & _]]
   (throw (js/Error. (str "Unrecognized elem: " k))))
 
-(defmethod ddn-elem :group group [ctx [_ opts & elems]]
+(defmethod ddn-elem :group group [ctx [_ _ & elems]]
   (if (coll? (first (first elems)))
     (doseq [e (first elems)]
       (ddn-elem ctx e))
