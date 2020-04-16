@@ -100,6 +100,8 @@ To get an interactive development environment run:
 
 A browser window will be launched running the test demo from `minicosm.demo`. Auto-reloading with Figwheel is enabled, however do note that because of peculiarities with the behavior of canvas elements and some of the internal JS event hooks, manual reloading on a change may still be necessary.
 
+Whenever possible, this project seeks to stick with vanilla ClojureScript/JavaScript, for the sake of easy portability.
+
 ## License
 
 Copyright © 2020 A.C. Danvers

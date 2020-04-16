@@ -9,6 +9,7 @@ A functional programming orientated game engine
 - [ ] "splitting" sprite/tile sheets  
 - [ ] Arc support for :circ  
 - [ ] callback asset loading support  
+- [ ] Text justification  
 
 ### In Progress
 
