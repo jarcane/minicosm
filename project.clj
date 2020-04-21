@@ -1,4 +1,4 @@
-(defproject minicosm "0.1.2"
+(defproject minicosm "0.1.3"
   :description "A functional-first game engine for the browser" 
   :url "https://github.com/jarcane/minicosm"
   :license {:name "Eclipse Public License"
@@ -52,7 +52,7 @@
              ;; :server-port 3449 ;; default
              ;; :server-ip "127.0.0.1"
              
-             :css-dirs ["resources/public/css"] ;; watch and update CSS
+             :css-dirs ["resources/public/css"]} ;; watch and update CSS
              
              ;; Start an nREPL server into the running figwheel process
              ;; :nrepl-port 7888
@@ -85,7 +85,7 @@
              
              ;; to pipe all the output to the repl
              ;; :server-logfile false
-             }
+             
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
                                   [figwheel-sidecar "0.5.19"]]

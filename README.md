@@ -61,7 +61,7 @@ An example from the demo:
 
 DDN defines a number of common elements, described as follows, with their options.
 
-* `:group` - A grouping of multiple elements to be drawn. This is useful both as the base element for an entire drawing, or for providing a single value that contains multiple elements to be drawn. The body should contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. Options:
+* `:group` - A grouping of multiple elements to be drawn. This is useful both as the base element for an entire drawing, or for providing a single value that contains multiple elements to be drawn. The body should contain *either* 1 or more child elements which will be drawn sequentially to the canvas, *or* a list containing 1 or more child elements. `:group` will ignore any `nil?` elements in the body; this is to allow safe use of conditional contents. Options:
     - `:desc` (optional) - a string describing the nature of the group. useful for documentation purposes.
 * `:image` - A static image to be drawn. The contents of the element should be an image value. Options:
     - `:pos` (optional) - the coordinates at which to place the image, as a pair of coordinates (ie. `[x y]`). If not provided, assumes `[0 0]` coordinates.
