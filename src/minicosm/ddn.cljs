@@ -9,9 +9,9 @@
 
 (defmethod ddn-elem :group group [ctx [_ _ & elems]]
   (if (coll? (first (first elems)))
-    (doseq [e (first elems)]
+    (doseq [e (filter #(not (nil? %)) (first elems))]
       (ddn-elem ctx e))
-    (doseq [e elems]
+    (doseq [e (filter #(not (nil? %)) elems)]
       (ddn-elem ctx e))))
 
 (defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]}} img]]
