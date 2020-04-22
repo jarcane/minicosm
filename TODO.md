@@ -10,6 +10,7 @@ A functional programming orientated game engine
 - [ ] Arc support for :circ  
 - [ ] callback asset loading support  
 - [ ] Text justification  
+- [ ] pass delta time to on-tick  
 
 ### In Progress
 
