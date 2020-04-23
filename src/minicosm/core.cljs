@@ -105,6 +105,6 @@
         init-state (init)
         astate (atom :stop)
         done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded astate handlers))]
-    (set! js/window.onkeyup (fn [e] (swap! key-evs disj (.-code e))))
-    (set! js/window.onkeydown (fn [e] (swap! key-evs conj (.-code e))))
+    (set! js/window.onkeyup (fn [e] (.preventDefault e) (swap! key-evs disj (.-code e))))
+    (set! js/window.onkeydown (fn [e] (.preventDefault e) (swap! key-evs conj (.-code e))))
     (asset-loader ctx done-fn (assets))))
