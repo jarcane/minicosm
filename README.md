@@ -9,6 +9,8 @@ A simple functional-first game engine inspired by universe.rkt
 
 minicosm is a simple game engine inspired by Racket's "universe" library. minicosm provides a simple, functional, immutable game loop API, and an easy to use markup language based on canvas. The core mission is to create something easy to use, easy to learn, and purely functional from the API consumer's perspective, while handling all the messy business of canvas drawing behind the scenes.
 
+A example game is available [on Github](https://github.com/jarcane/minicosm-demo), and playable on [itch.io](https://annarcana.itch.io/minicosm-demo)
+
 ## Getting started
 
 You can generate a new minicosm project for yourself with [Leiningen](https://github.com/technomancy/leiningen) by running the following, where `myproject` is the name of your new game project.
