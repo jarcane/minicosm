@@ -112,8 +112,6 @@ A browser window will be launched running the test playground from `minicosm.dem
 
 Whenever possible, this project seeks to stick with vanilla ClojureScript/JavaScript, without additional dependencies beyond ClojureScript itself.
 
-PRs should be made against the `develop` branch; `master` is reserved as the main production release branch. 
-
 ## License
 
 Copyright © 2020 A.C. Danvers
