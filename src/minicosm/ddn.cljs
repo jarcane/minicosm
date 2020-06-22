@@ -1,5 +1,24 @@
 (ns minicosm.ddn)
 
+(def default-transforms
+  {:pos [0, 0]
+   :rotate 0
+   :pivot [0, 0]
+   :scale 1})
+
+(defn render-with-transforms! [ctx rend attrs]
+  (let [transforms (merge default-transforms attrs)
+        {:keys [pos rotate pivot scale]} transforms
+        [x y] pos
+        [px py] pivot]
+    (.setTransform ctx scale 0 0 scale x y)
+    (.translate ctx px py)
+    (.rotate ctx rotate)
+    (.translate ctx (- px) (- py))
+    (rend)
+    (.rotate ctx 0)
+    (.setTransform ctx 1 0 0 1 0 0)))
+
 (defmulti ddn-elem
   "This multimethod handles the rendering of individual DDN elements, dispatching by key"
   (fn [_ [k & _]] k))
@@ -14,16 +33,22 @@
     (doseq [e (filter #(seq %) elems)]
       (ddn-elem ctx e))))
 
-(defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]}} img]]
+(defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]} :as attrs} img]]
   (let [[x y] pos]
     (cond
       view (let [[[x1 y1] [x2 y2]] view
                  sw (- x2 x1)
                  sh (- y2 y1)]
-             (.drawImage ctx img x1 y1 sw sh x y))
-      :else (.drawImage ctx img x y))))
+             (render-with-transforms!
+               ctx
+               #(.drawImage ctx img x1 y1 sw sh 0 0)
+               attrs))
+      :else (render-with-transforms!
+              ctx
+              #(.drawImage ctx img 0 0)
+              attrs))))
 
-(defmethod ddn-elem :map map [ctx [_ {:keys [pos dim size view] :or {pos [0 0]}} map]]
+(defmethod ddn-elem :map map [ctx [_ {:keys [pos dim size view] :or {pos [0 0]} :as attrs} map]]
   (let [[x y] pos
         [tw th] dim
         w (* tw size)
@@ -36,42 +61,66 @@
     (doseq [x (range 0 tw)
             y (range 0 th)]
       (let [tile (aget tiles y x)]
-        (.drawImage tctx tile (* x size) (* y size))))
+        (render-with-transforms!
+          ctx
+          #(.drawImage tctx tile (* x size) (* y size))
+          attrs)))
     (cond
       view (let [[[x1 y1] [x2 y2]] view
                  sw (- x2 x1)
                  sh (- y2 y1)]
-             (.drawImage ctx cvs x1 y1 sw sh x y))
-      :else (.drawImage ctx cvs x y))))
+             (render-with-transforms!
+               ctx
+              #(.drawImage ctx cvs x1 y1 sw sh x y)
+               attrs))
+      :else (render-with-transforms!
+              ctx
+              #(.drawImage ctx cvs x y)
+              attrs))))
 
-(defmethod ddn-elem :sprite sprite [ctx [_ {[x y] :pos} sprite]]
-  (.drawImage ctx sprite x y))
+(defmethod ddn-elem :sprite sprite [ctx [_ attrs sprite]]
+  (let [iw (.-width sprite)
+        ih (.-height sprite)
+        angle (rand)]
+    (render-with-transforms!
+      ctx
+      #(.drawImage ctx sprite 0 0 iw ih 0 0 iw ih)
+      attrs)))
 
-(defmethod ddn-elem :text text [ctx [_ {:keys [pos color font]} & strings]]
+(defmethod ddn-elem :text text [ctx [_ {:keys [pos color font] :as attrs} & strings]]
   (let [[x y] pos
         old-color (.-fillStyle ctx)
         old-font (.-font ctx)]
     (set! (.-textBaseline ctx) "top")
     (when color (set! (.-fillStyle ctx) color))
     (when font (set! (.-font ctx) font))
-    (.fillText ctx (apply str strings) x y)
+    (render-with-transforms!
+      ctx
+      #(.fillText ctx (apply str strings) 0 0)
+      attrs)
     (when color (set! (.-fillStyle ctx) old-color))
     (when font (set! (.-font ctx) old-font))))
 
-(defmethod ddn-elem :rect rect [ctx [_ {:keys [pos dim style color] :or {style :stroke}}]]
+(defmethod ddn-elem :rect rect [ctx [_ {:keys [pos dim style color] :or {style :stroke} :as attrs}]]
   (let [[x y] pos
         [w h] dim]
     (case style
       :fill (let [old-color (.-fillStyle ctx)]
               (when color (set! (.-fillStyle ctx) color))
-              (.fillRect ctx x y w h)
+              (render-with-transforms!
+                ctx
+                #(.fillRect ctx 0 0 w h)
+                attrs)
               (when color (set! (.-fillStyle ctx) old-color)))
       :stroke (let [old-color (.-strokeStyle ctx)]
                 (when color (set! (.-strokeStyle ctx) color))
-                (.strokeRect ctx (+ 0.5 x) (+ 0.5 y) w h)
+                (render-with-transforms!
+                  ctx
+                  #(.strokeRect ctx 0.5 0.5 w h)
+                  attrs)
                 (when color (set! (.-strokeStyle ctx) old-color))))))
 
-(defmethod ddn-elem :circ circ [ctx [_ {:keys [pos r style color] :or {style :stroke}}]]
+(defmethod ddn-elem :circ circ [ctx [_ {:keys [pos r style color] :or {style :stroke} :as attrs}]]
   (let [[x y] pos
         [rx ry] r
         pi js/Math.PI]
@@ -79,32 +128,42 @@
     (case style 
       :stroke (let [old-color (.-strokeStyle ctx)]
                 (when color (set! (.-strokeStyle ctx) color))
-                (.ellipse ctx x y rx ry (/ pi 4) 0 (* 2 pi))
+                (render-with-transforms!
+                  ctx 
+                  #(.ellipse ctx 0 0 rx ry (/ pi 4) 0 (* 2 pi))
+                  attrs)
                 (.stroke ctx)
                 (when color (set! (.-strokeStyle ctx) old-color)))
       :fill (let [old-color (.-fillStyle ctx)]
               (when color (set! (.-fillStyle ctx) color))
-              (.ellipse ctx x y rx ry (/ pi 4) 0 (* 2 pi))
+              (render-with-transforms!
+                ctx
+                #(.ellipse ctx 0 0 rx ry (/ pi 4) 0 (* 2 pi))
+                attrs)
               (.fill ctx)
               (when color (set! (.-fillStyle ctx) old-color))))
     (.closePath ctx)))
 
-(defmethod ddn-elem :line line [ctx [_ {:keys [from to width color]}]]
+(defmethod ddn-elem :line line [ctx [_ {:keys [from to width color] :as attrs}]]
   (let [[x1 y1] from
         [x2 y2] to
         old-width (.-lineWidth ctx)
         old-color (.-strokeStyle ctx)]
     (when width (set! (.-lineWidth ctx) width))
     (when color (set! (.-strokeStyle ctx) color))
-    (.beginPath ctx)
-    (.moveTo ctx x1 y1)
-    (.lineTo ctx x2 y2)
-    (.stroke ctx)
-    (.closePath ctx)
+    (render-with-transforms!
+      ctx
+      #(do
+         (.beginPath ctx)
+         (.moveTo ctx x1 y1)
+         (.lineTo ctx x2 y2)
+         (.stroke ctx)
+         (.closePath ctx))
+      attrs)
     (when width (set! (.-lineWidth ctx) old-width))
     (when color (set! (.-strokeStyle ctx) old-color))))
 
-(defmethod ddn-elem :path path [ctx [_ {:keys [width color style]} [[ox oy] & points]]]
+(defmethod ddn-elem :path path [ctx [_ {:keys [width color style] :as attrs} [[ox oy] & points]]]
   (let [old-width (.-lineWidth ctx)
         old-color (case style 
                     :stroke (.-strokeStyle ctx)
@@ -113,24 +172,32 @@
     (when color (case style 
                   :stroke (set! (.-strokeStyle ctx) color)
                   :fill (set! (.-fillStyle ctx) color)))
-    (.beginPath ctx)
-    (.moveTo ctx ox oy)
-    (doseq [[x y] points]
-      (.lineTo ctx x y))
-    (case style
-      :stroke (.stroke ctx)
-      :fill (.fill ctx))
-    (.closePath ctx)
+    (render-with-transforms!
+      ctx
+      #(do
+         (.beginPath ctx)
+         (.moveTo ctx ox oy)
+         (doseq [[x y] points]
+           (.lineTo ctx x y))
+         (case style
+           :stroke (.stroke ctx)
+           :fill (.fill ctx))
+         (.closePath ctx))
+      attrs)
+    
     (when width (set! (.-lineWidth ctx) old-width))
     (when color (case style
                   :stroke (set! (.-strokeStyle ctx) old-color)
                   :fill (set! (.-fillStyle ctx) old-color)))))
 
-(defmethod ddn-elem :point point [ctx [_ {:keys [pos color]}]]
+(defmethod ddn-elem :point point [ctx [_ {:keys [pos color] :as attrs}]]
   (let [[x y] pos
         old-color (.-fillStyle ctx)]
     (when color (set! (.-fillStyle ctx) color))
-    (.fillRect ctx x y 1 1)
+    (render-with-transforms!
+      ctx 
+      #(.fillRect ctx 0 0 1 1)
+      attrs)
     (when color (set! (.-fillStyle ctx) old-color))))
 
 (defn render! 
