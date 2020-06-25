@@ -1,5 +1,6 @@
 (ns minicosm.core
-  (:require [minicosm.ddn :refer [render!]]))
+  (:require [minicosm.ddn :refer [render!]]
+            [clojure.set :as set]))
 
 (defn- make-callback
   [url key counts]
@@ -51,30 +52,37 @@
          (draw-loading ctx)
          (js/requestAnimationFrame (fn [_] (asset-loader ctx done-fn assets counts))))))))
 
-(defn- handle-audio [state assets astate to-play]
-  (let [curr-state (deref astate)
-        is-playing (not (= :stop curr-state))
-        {:keys [music effects]} (to-play state assets is-playing)]
-    (cond
-      (= :stop music) (.pause curr-state)
-      music (do
-              (when (and curr-state is-playing) (.pause curr-state))
-              (reset! astate music)
-              (swap! astate (fn [m] 
-                              (set! (.-loop m) true)
-                              (.play m)
-                              m))))
-    (doseq [e effects]
-      (.play e))))
+(defn- handle-audio [state assets audio-state to-play]
+  (let [curr-state (deref audio-state)
+        new-state (to-play state assets curr-state)
+        pruned-state (update new-state :effects (fn [effects] (filter #(.ended %) effects)))
+        {curr-music :music curr-effects :effects} curr-state
+        {new-music :music new-effects :effects} new-state
+        effects-to-stop (set/difference curr-effects new-effects)
+        effects-to-start (set/difference new-effects curr-effects)
+        music-to-stop (set/difference curr-music new-music)
+        music-to-start(set/difference new-music curr-music)]
+    (doseq [e effects-to-stop]
+      (.pause e)
+      (set! (.-currentTime e) 0))
+    (doseq [e effects-to-start]
+      (.play e))
+    (doseq [m music-to-stop]
+      (.pause m)
+      (set! (.-currentTime m) 0))
+    (doseq [m music-to-start]
+      (set! (.-loop m) true)
+      (.play m))
+    (reset! audio-state pruned-state)))
 
-(defn- game-loop! [t ctx key-evs state assets astate {:keys [on-key on-tick to-play to-draw] :as handlers}]
+(defn- game-loop! [t ctx key-evs state assets audio-state {:keys [on-key on-tick to-play to-draw] :as handlers}]
   (let [new-state (-> state
                       (on-key @key-evs)
                       (on-tick t))]
     (.clearRect ctx 0 0 (.. ctx -canvas -width) (.. ctx -canvas -height))
-    (handle-audio state assets astate to-play)
+    (handle-audio state assets audio-state to-play)
     (render! ctx (to-draw new-state assets))
-    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets astate handlers)))))
+    (js/requestAnimationFrame (fn [t] (game-loop! t ctx key-evs new-state assets audio-state handlers)))))
 
 (defn start!
   "Initiates the main game loop. Expects a map of handler functions with the following keys:
@@ -103,8 +111,8 @@
         ctx (.getContext canvas "2d")
         key-evs (atom #{})
         init-state (init)
-        astate (atom :stop)
-        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded astate handlers))]
+        audio-state (atom {:music #{} :effects #{}})
+        done-fn (fn [assets-loaded] (game-loop! 0 ctx key-evs init-state assets-loaded audio-state handlers))]
     (set! js/window.onkeyup (fn [e] (.preventDefault e) (swap! key-evs disj (.-code e))))
     (set! js/window.onkeydown (fn [e] (.preventDefault e) (swap! key-evs conj (.-code e))))
     (asset-loader ctx done-fn (assets))))
