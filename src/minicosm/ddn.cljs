@@ -33,9 +33,9 @@
     ctx
     (if (coll? (first (first elems)))
       (fn [] (doseq [e (filter #(seq %) (first elems))]
-        (ddn-elem ctx e)))
+              (ddn-elem ctx e)))
       (fn [] (doseq [e (filter #(seq %) elems)]
-        (ddn-elem ctx e))))
+              (ddn-elem ctx e))))
     attrs))
 
 (defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]} :as attrs} img]]
