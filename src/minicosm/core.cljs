@@ -55,7 +55,7 @@
 (defn- handle-audio [state assets audio-state to-play]
   (let [curr-state (deref audio-state)
         new-state (to-play state assets curr-state)
-        pruned-state (update new-state :effects (fn [effects] (filter #(.ended %) effects)))
+        pruned-state (update new-state :effects (fn [effects] (set (filter #(.-ended %) effects))))
         {curr-music :music curr-effects :effects} curr-state
         {new-music :music new-effects :effects} new-state
         effects-to-stop (set/difference curr-effects new-effects)
