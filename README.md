@@ -36,7 +36,7 @@ The handler map should contain the following keys, each containing a function wi
 * `:to-play (fn [state assets sound-state] sound-state)` -
     A function that taks the current game state, assets, and the current sound-state
     and returns a map describing sounds to play, in the form:
-    `{:music #{<sound assets to loop} :effects #{<sound assets to play once>}}`. If a sound is in the sound-state you receive, it is currently playing. Effects will be removed from the state when they finish - to loop a sound effect, add it as long as some condition holds. 
+    `{:music #{<sound assets to loop} :effects #{<sound assets to play once>}}`. If a sound is in the sound-state you receive, it is currently playing. Effects will be removed from the state when they finish - to loop a sound effect, add it as long as some condition holds. To stop a currently-playing sound, remove it from the sound-state. This will reset the sound, rather than pause it in-place.
 * `:to-draw (fn [state assets] ddn)` -
     A function that takes the current game state and the image asset map, and returns a DDN vector of the graphics to be drawn. 
 
