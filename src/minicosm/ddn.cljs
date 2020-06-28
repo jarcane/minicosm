@@ -11,13 +11,15 @@
         {:keys [pos rotate pivot scale]} transforms
         [x y] pos
         [px py] pivot]
-    (.setTransform ctx scale 0 0 scale x y)
+    (.transform ctx scale 0 0 scale x y)
     (.translate ctx px py)
     (.rotate ctx rotate)
     (.translate ctx (- px) (- py))
     (rend)
-    (.rotate ctx 0)
-    (.setTransform ctx 1 0 0 1 0 0)))
+    (.translate ctx px py)
+    (.rotate ctx (- rotate))
+    (.translate ctx (- px) (- py))
+    (.transform ctx (/ 1 scale) 0 0 (/ 1 scale) (- x) (- y))))
 
 (defmulti ddn-elem
   "This multimethod handles the rendering of individual DDN elements, dispatching by key"
@@ -26,12 +28,15 @@
 (defmethod ddn-elem :default invalid-elem [_ [k & _]]
   (throw (js/Error. (str "Unrecognized elem: " k))))
 
-(defmethod ddn-elem :group group [ctx [_ _ & elems]]
-  (if (coll? (first (first elems)))
-    (doseq [e (filter #(seq %) (first elems))]
-      (ddn-elem ctx e))
-    (doseq [e (filter #(seq %) elems)]
-      (ddn-elem ctx e))))
+(defmethod ddn-elem :group group [ctx [_ attrs & elems]]
+  (render-with-transforms!
+    ctx
+    (if (coll? (first (first elems)))
+      (fn [] (doseq [e (filter #(seq %) (first elems))]
+        (ddn-elem ctx e)))
+      (fn [] (doseq [e (filter #(seq %) elems)]
+        (ddn-elem ctx e))))
+    attrs))
 
 (defmethod ddn-elem :image image [ctx [_ {:keys [pos view] :or {pos [0 0]} :as attrs} img]]
   (let [[x y] pos]
