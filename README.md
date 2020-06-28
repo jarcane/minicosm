@@ -76,13 +76,14 @@ DDN defines a number of common elements, described as follows, with their option
     - `:pivot` (optional) - a point, **relative to `:pos`**, around which the image will be rotated. Defaults to `[0 0]`.
     - `:view` (optional) - Defines a sub-rectangle of the image to be drawn, in the form of a pair of pairs of coordinates (ie. `[[x1 y1] [x2 y2]]). If not provided, the whole image is displayed (limited by the size of the canvas)
 * `:map` - A tilemap to be drawn. The contents of the element should be a 2D array of sprites. Options:
+
+    - `:dim` - the dimensions of the tile map in tiles, as a pair of width and height: `[w h]`.
+    - `:size` - the dimensions of each tile in pixels, as an integer. Tiles are assumed to be square. 
+    - `:view` (optional) - Defines a sub-section of the map to be drawn, as a pair of pairs of x/y coordinates (ie. `[[x1 y1] [x2 y2]]). Note that this is by pixel, not tile, to allow for smooth scrolling of partial tiles. If not provided the whole map is drawn.
     - `:pos` (optional) - the coordinates at which to begin drawing the map, as a pair (ie. `[x y]`). If not provided assumes `[0 0]`.
     - `:scale` (optional) - a number by which the map will be uniformly scaled. Defaults to `1`.
     - `:rotate` (optional) - in radians, the extent of rotation of the entire map (_not_ tiles individually) clockwise around `:pivot`. Defaults to `0`.
     - `:pivot` (optional) - a point, **relative to `:pos`**, around which the map will be rotated. Defaults to `[0 0]`.
-    - `:dim` - the dimensions of the tile map in tiles, as a pair of width and height: `[w h]`.
-    - `:size` - the dimensions of each tile in pixels, as an integer. Tiles are assumed to be square.
-    - `:view` (optional) - Defines a sub-section of the map to be drawn, as a pair of pairs of x/y coordinates (ie. `[[x1 y1] [x2 y2]]). Note that this is by pixel, not tile, to allow for smooth scrolling of partial tiles. If not provided the whole map is drawn.
 * `:sprite` - A sprite to be drawn. Contents should contain an image value. Options:
     - `:pos` - A pair of coordinates at which to draw the sprite (ie. `[x y]`).
     - `:scale` (optional) - a number by which the sprite will be uniformly scaled. Defaults to `1`.
@@ -90,27 +91,27 @@ DDN defines a number of common elements, described as follows, with their option
     - `:pivot` (optional) - a point, **relative to `:pos`**, around which the sprite will be rotated. Defaults to `[0 0]`.
 * `:text` - Indicates text to be drawn. Contents should be a string or series of strings. Options:
     - `:pos` - a pair indicating the x/y coordinates at which to begin drawing the text.
+    - `:color`: a string containing the CSS color value of the text.
+    - `:font`: a string containing the CSS font value for the text.
     - `:scale` (optional) - a number by which the text will be uniformly scaled. Defaults to `1`.
     - `:rotate` (optional) - in radians, the extent of rotation clockwise around `:pivot`. Defaults to `0`.
     - `:pivot` (optional) - a point, **relative to `:pos`**, around which the text will be rotated. Defaults to `[0 0]`.
-    - `:color`: a string containing the CSS color value of the text.
-    - `:font`: a string containing the CSS font value for the text.
 * `:rect` - A rectangle to be drawn on screen. Options:
     - `:pos` - a pair indicating the x/y coordinates of the origin point of the rectangle
-    - `:scale` (optional) - a number by which the rect will be uniformly scaled. Defaults to `1`.
-    - `:rotate` (optional) - in radians, the extent of rotation clockwise around `:pivot`. Defaults to `0`.
-    - `:pivot` (optional) - a point, **relative to `:pos`**, around which the rect will be rotated. Defaults to `[0 0]`.
     - `:dim` - a pair indicating the width and height (`[w h]`) of the rect
     - `:style` - One of either `:stroke` (line only) or `:fill` (filled rect)
     - `:color` - A CSS color value for the color of the rect
+    - `:scale` (optional) - a number by which the rect will be uniformly scaled. Defaults to `1`.
+    - `:rotate` (optional) - in radians, the extent of rotation clockwise around `:pivot`. Defaults to `0`.
+    - `:pivot` (optional) - a point, **relative to `:pos`**, around which the rect will be rotated. Defaults to `[0 0]`.
 * `:circ` - A circle or ellipse. Options:
     - `:pos` - a pair indicating the x/y coords of the center of the circ
-    - `:scale` (optional) - a number by which the circ will be uniformly scaled. Defaults to `1`.
-    - `:rotate` (optional) - in radians, the extent of rotation clockwise around `:pivot`. Defaults to `0`.
-    - `:pivot` (optional) - a point, **relative to `:pos`**, around which the circ will be rotated. Defaults to `[0 0]`.
     - `:r` - A pair indicating the major/minor (horizontal/vertical) radius of the circ
     - `:style` - One of either `:stroke` (line only) or `:fill` (filled circ)
     - `:color` - A CSS color value for the color of the circ
+    - `:scale` (optional) - a number by which the circ will be uniformly scaled. Defaults to `1`.
+    - `:rotate` (optional) - in radians, the extent of rotation clockwise around `:pivot`. Defaults to `0`.
+    - `:pivot` (optional) - a point, **relative to `:pos`**, around which the circ will be rotated. Defaults to `[0 0]`.
 * `:line` - A line to be drawn. Options:
     - `:from` - a pair of x/y coordinates for the origin of the line
     - `:to` - a pair of x/y coords for the endpoint of the line
