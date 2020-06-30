@@ -18,10 +18,9 @@
     (for [_ (range 16)]
       (make-stars))))
 
-(defn draw [[x y] assets]
+(defn draw [state assets]
   [:group {:desc "base"}
    [:map {:pos [0 0] :dim [16 12] :size 32} tilemap]
-   [:sprite {:pos [x y]} (:ship assets)]
    [:text {:pos [32 32] :color "white" :font "16px serif"} "THIS IS A TEST"]
    [:group {:desc "shapes"}
     (when false [:text {:pos [32 64] :color "white"} "NULL SAFE"])
@@ -35,24 +34,34 @@
       [250 200]
       [225 250]
       [175 250]
-      [200 200]]]]])
+      [200 200]]]]
+   [:sprite {:pos [(:x state) (:y state)]} (:ship assets)]])
 
 (def game-handlers
-  {:init (fn [] [128 128])
+  {:init (fn [] {:x 128 :y 128 :moving false})
    :assets (fn [] {:ship [:image "/img/shuttle.png"]
                    :zap [:audio "/audio/zap.wav"]
+                   :hover [:audio "/audio/hover.wav"]
                    :background [:audio "/audio/igluifohn.wav"]})
-   :on-key (fn [[x y] key-evs]
-             (cond
-               (key-evs "ArrowUp") [x (- y 3)]
-               (key-evs "ArrowDown") [x (+ y 3)]
-               (key-evs "ArrowLeft") [(- x 3) y]
-               (key-evs "ArrowRight") [(+ x 3) y]
-               :else [x y]))
+   :on-key (fn [state key-evs]
+             (cond-> state
+               true (assoc :moving
+                           (pos? (count
+                               (clojure.set/intersection
+                                 #{"ArrowUp" "ArrowDown" "ArrowLeft" "ArrowRight"}
+                                 key-evs))))
+               (key-evs "ArrowUp") (update :y dec)
+               (key-evs "ArrowDown") (update :y inc)
+               (key-evs "ArrowLeft") (update :x dec)
+               (key-evs "ArrowRight") (update :x inc)
+               :else identity))
    :on-tick (fn [state _] state)
-   :to-play (fn [_ assets is-playing] (if is-playing
-                                        {}
-                                        {:music (:background assets)}))
+   :to-play (fn [state assets sounds]
+              {:music #{(:background assets)}
+               :effects (if
+                          (:moving state)
+                          #{(:hover assets)} 
+                          #{})})
    :to-draw draw})
 
 (start! game-handlers)

@@ -33,11 +33,10 @@ The handler map should contain the following keys, each containing a function wi
     A function that takes the current game state, and a set of current key codes pressed, and returns a new game state
 * `:on-tick (fn [state time] state)` -
     A function that takes the current game state, and a DOMHighResTimeStamp, indicating the number of ms since time origin (https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin). Runs every frame, approx. 60fps. Returns a new game state.
-* `:to-play (fn [state assets] sound-state)` -
-    A function that taks the current state, assets, and a boolean indicating if music is currently playing
+* `:to-play (fn [state assets sound-state] sound-state)` -
+    A function that taks the current game state, assets, and the current sound-state
     and returns a map describing sounds to play, in the form:
-    `{:music <sound asset to loop or :stop> :effects [<sound assets to play once>]}`. If the :music key is empty,
-    any currently playing sound will continue.
+    `{:music #{<sound assets to loop} :effects #{<sound assets to play once>}}`. If a sound is in the sound-state you receive, it is currently playing. Effects will be removed from the state when they finish - to loop a sound effect, add it as long as some condition holds. To stop a currently-playing sound, remove it from the sound-state. This will reset the sound, rather than pause it in-place.
 * `:to-draw (fn [state assets] ddn)` -
     A function that takes the current game state and the image asset map, and returns a DDN vector of the graphics to be drawn. 
 
