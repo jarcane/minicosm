@@ -1,4 +1,4 @@
-(ns ^:figwheel-hooks minicosm.demo
+(ns minicosm.demo
   (:require [minicosm.core :refer [start!]]
             [minicosm.ddn :refer [render-to-canvas]]))
 
