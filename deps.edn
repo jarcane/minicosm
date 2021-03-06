@@ -6,5 +6,4 @@
                    com.bhauman/figwheel-main {:mvn/version "0.2.11"}}
                  :extra-paths ["target"]}
            :build {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}
-           :min   {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]}
-           :test  {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "dale.test-runner"]}}}
+           :min   {:main-opts ["-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]}}}
