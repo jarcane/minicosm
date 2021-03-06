@@ -137,7 +137,7 @@ DDN defines a number of common elements, described as follows, with their option
 
 To get an interactive development environment run:
 
-    lein figwheel
+    `clj -A:fig:build`
 
 A browser window will be launched running the test playground from `minicosm.demo`. Auto-reloading with Figwheel is enabled, however do note that because of peculiarities with the behavior of canvas elements and some of the internal JS event hooks, manual reloading on a change may still be necessary.
 
