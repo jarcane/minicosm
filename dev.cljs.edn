@@ -1,5 +1,5 @@
-^{:watch-dirs ["test" "src"]
+^{:watch-dirs ["src"]
   :css-dirs ["resources/public/css"]
   :auto-testing true
    }
-{:main dale.minicosm-port}
+{:main minicosm.demo}
